@@ -16,116 +16,145 @@ import javax.swing.table.DefaultTableModel;
  * @author zuni
  */
 public class laman_bobotkriteria extends javax.swing.JFrame {
-koneksi1 koneksi;
+
+    koneksi1 koneksi;
     ResultSet resultSet;
     Statement statement;
-     public String sql = "";
+    public String sql = "";
     private Connection con;
-    
- DefaultTableModel tabMode;
-  private void update_tabel(){
-    try {
-  java.sql.Connection conn;
-  conn = (java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
+    DefaultTableModel tabMode;
 
-     java.sql.Statement stm = conn.createStatement();
-    java.sql.ResultSet sql;
-    sql = stm.executeQuery("Select * from bobot_kriteria");
-//        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
-   jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
-   
-    } catch (Exception e) {
-     }}
-    /**
-     * Creates new form laman_bobotkriteria
-     */
+//    private void update_tabel() {
+//        try {
+//            java.sql.Connection conn;
+//            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+//            java.sql.Statement stm = conn.createStatement();
+//            java.sql.ResultSet sql;
+//            sql = stm.executeQuery("Select * from bobot_kriteria");
+////        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
+//            jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
+//
+//        } catch (Exception e) {
+//        }
+//    }
+
+    private void tabel_kriteria() {
+        if(id_k.getSelectedItem()==""){
+            try {
+                java.sql.Connection conn;
+                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.Statement stm = conn.createStatement();
+                java.sql.ResultSet sql;
+                sql = stm.executeQuery("Select * from bobot_kriteria");
+    //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
+                jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
+
+            } catch (Exception e) {
+            }
+        }
+        else{
+            try {
+                System.out.println("t_kriteria");
+                java.sql.Connection conn;
+                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.Statement stm = conn.createStatement();
+                java.sql.ResultSet sql;
+                String query = "Select * from bobot_kriteria where id_kriteria='" + id_k.getSelectedItem() +"' ";
+                System.out.println(query);
+                sql = stm.executeQuery(query);
+    //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
+                jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
+
+            } catch (Exception e) {
+            }
+        }
+        
+    }
+
     public laman_bobotkriteria() {
         initComponents();
-          tampil_k();
+        tampil_k();
         auto_number();
-         update_tabel();
-        kosongkan_text();  
+        tabel_kriteria();
+        kosongkan_text();
     }
-    
-     private void koneksi() {
-    try {
-        Class.forName("com.mysql.jdbc.Driver");
-        con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
+
+    private void koneksi() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
         } catch (Exception e) {
         }
     }
-    
-    private void auto_number(){   
-   try {
-   koneksi();
-           String sql ="SELECT MAX(right(id_bk,2))AS no from bobot_kriteria";
-             statement = (Statement) con.createStatement();
-          ResultSet rs= statement.executeQuery(sql);
-         while (rs.next()) {
-               if (rs.first() == false){
-                id_bk.setText("BK001");
-               }else{
+
+    private void auto_number() {
+        try {
+            koneksi();
+            String sql = "SELECT MAX(right(id_bk,2))AS no from bobot_kriteria";
+            statement = (Statement) con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                if (rs.first() == false) {
+                    id_bk.setText("BK001");
+                } else {
                     rs.last();
-                   int auto_id = rs.getInt(1) + 1;
-                  String no = String.valueOf(auto_id);
-                   int noLong=no.length();
-                   for (int a = 0; a< 3-noLong; a++){
-                       no= "0" + no;
-                   }
-                   id_bk.setText("BK" + no);
-                   
-               }
-           }
-     } catch (Exception e) {
-           JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
+                    int auto_id = rs.getInt(1) + 1;
+                    String no = String.valueOf(auto_id);
+                    int noLong = no.length();
+                    for (int a = 0; a < 3 - noLong; a++) {
+                        no = "0" + no;
+                    }
+                    id_bk.setText("BK" + no);
 
-     }
-       }
-    
-    
-     public final void tampil_k(){
-    id_k.addItem("");
-
-      try {
-          koneksi();
-          resultSet=statement.executeQuery("select id_kriteria from kriteria");
-          while (resultSet.next()) {
-             String sa = resultSet.getString("id_kriteria");
-             id_k.addItem(sa);
-
-          }
-      } catch (Exception e) {
-      }
-      }
-     
-   
-     private void kosongkan_text(){
-     id_k.getSelectedItem();
-     nm_k.setText("");
-     id_bf.setText("");
-     id_bk.setText("");
-     nm_bk.setText("");
-     bobot_bk.setText("");
-     x.setText("");
-     y.setText("");
-     auto_number();
-     }
-     
-      private void tampil_kriteria(){
- try {
-           koneksi();
-           sql="select * from kriteria where id_kriteria='"+id_k.getSelectedItem()+"'";
-            statement=(Statement) con.createStatement();
-            resultSet=statement.executeQuery(sql);
-           while (resultSet.next()) {
-                 nm_k.setText(resultSet.getString("kriteria"));
-                  id_bf.setText(resultSet.getString("id_bobotfuzzy"));
+                }
             }
-            } catch (Exception e) {
-          JOptionPane.showMessageDialog(rootPane, statement);
-        } 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
+
         }
-     
+    }
+
+    public final void tampil_k() {
+        id_k.addItem("");
+
+        try {
+            koneksi();
+            resultSet = statement.executeQuery("select id_kriteria from kriteria");
+            while (resultSet.next()) {
+                String sa = resultSet.getString("id_kriteria");
+                id_k.addItem(sa);
+
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private void kosongkan_text() {
+        id_k.getSelectedItem();
+        nm_k.setText("");
+        id_bf.setText("");
+        id_bk.setText("");
+        nm_bk.setText("");
+        bobot_bk.setText("");
+        x.setText("");
+        y.setText("");
+        auto_number();
+    }
+
+    private void tampil_kriteria() {
+        try {
+            koneksi();
+            sql = "select * from kriteria where id_kriteria='" + id_k.getSelectedItem() + "'";
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                nm_k.setText(resultSet.getString("kriteria"));
+                id_bf.setText(resultSet.getString("id_bobotfuzzy"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, statement);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -255,6 +284,11 @@ koneksi1 koneksi;
                 id_kActionPerformed(evt);
             }
         });
+        id_k.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                id_kKeyReleased(evt);
+            }
+        });
 
         nm_k.setEditable(false);
         nm_k.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -265,7 +299,6 @@ koneksi1 koneksi;
         });
 
         id_bk.setEditable(false);
-        id_bk.setBackground(new java.awt.Color(240, 240, 240));
         id_bk.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
         nm_bk.setBackground(new java.awt.Color(240, 240, 240));
@@ -455,7 +488,7 @@ koneksi1 koneksi;
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -474,7 +507,7 @@ koneksi1 koneksi;
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
-            String sql ="delete from bobot_kriteria where id_bk=? ";
+            String sql = "delete from bobot_kriteria where id_bk=? ";
             java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -482,11 +515,11 @@ koneksi1 koneksi;
             pst.execute();
 
             JOptionPane.showMessageDialog(null, "Hapus");
-           
+
 
         } catch (Exception e) {
         }
-        update_tabel();
+        tabel_kriteria();
         auto_number();
         kosongkan_text();
 
@@ -506,81 +539,87 @@ koneksi1 koneksi;
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
 
-     try {
-            int row =jTable1.getSelectedRow();
+        try {
+            int row = jTable1.getSelectedRow();
             String tabel_klik;
             tabel_klik = (jTable1.getModel().getValueAt(row, 0).toString());
-            java.sql.Connection conn =(java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
+            java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet sql = stm.executeQuery("select * from bobot_kriteria where id_bk='"+tabel_klik+"'");
-            if(sql.next()){
-                
+            java.sql.ResultSet sql = stm.executeQuery("select * from bobot_kriteria where id_bk='" + tabel_klik + "'");
+            if (sql.next()) {
+
                 String add1 = sql.getString("id_bk");
                 id_bk.setText(add1);
                 Object add2 = sql.getString("id_kriteria");
                 id_k.getSelectedItem();
                 String add3 = sql.getString("nm_bk");
                 nm_bk.setText(add3);
-                 String add4 = sql.getString("nilai_bk");
+                String add4 = sql.getString("nilai_bk");
                 bobot_bk.setText(add4);
                 String add5 = sql.getString("x");
                 x.setText(add5);
                 String add6 = sql.getString("y");
                 y.setText(add6);
-                
-            }     }
-            catch (Exception e) {
+
             }
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
- try {
+        try {
             String sql;
-            sql = "insert into bobot_kriteria values('"+id_bk.getText()+"','"+id_k.getSelectedItem()+"','"+nm_bk.getText()+"','"+bobot_bk.getText()+"','"+x.getText()+"','"+y.getText()+"')";
+            sql = "insert into bobot_kriteria values('" + id_bk.getText() + "','" + id_k.getSelectedItem() + "','" + nm_bk.getText() + "','" + bobot_bk.getText() + "','" + x.getText() + "','" + y.getText() + "')";
             java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
             pst.execute();
             JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
-        
-        update_tabel();
+
+        tabel_kriteria();
         auto_number();
-        kosongkan_text();        
+        kosongkan_text();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-              
-             
-              String value1 = id_bk.getText();
-               Object value2 = id_k.getSelectedItem();
-              String value3 = nm_bk.getText();
-              String value4=bobot_bk.getText();
-              String value5=x.getText();
-              String value6=y.getText();
-              
-            String sql ="update bobot_kriteria set  id_kriteria='"+value2+"',nm_bk='"+value3+"',nilai_bk='"+value4+"',x='"+value5+"',y='"+value6+"' where id_bk='"+value1+"'";
-            System.out.println(sql);
-            java.sql.Connection conn;
-            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
 
-            JOptionPane.showMessageDialog(null, "Edit ?");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error");
-        }  
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Your Message", "Title on Box", dialogButton);
+        if(dialogResult == 0) {
+                try {
+                    String value1 = id_bk.getText();
+                    Object value2 = id_k.getSelectedItem();
+                    String value3 = nm_bk.getText();
+                    String value4 = bobot_bk.getText();
+                    String value5 = x.getText();
+                    String value6 = y.getText();
+
+                    String sql = "update bobot_kriteria set  id_kriteria='" + value2 + "',nm_bk='" + value3 + "',nilai_bk='" + value4 + "',x='" + value5 + "',y='" + value6 + "' where id_bk='" + value1 + "'";
+                    System.out.println(sql);
+                    java.sql.Connection conn;
+                    conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+
+                    JOptionPane.showMessageDialog(null, "Edit ?");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error");
+                }
+
+                tabel_kriteria();
+                auto_number();
+                kosongkan_text();
+        } else {
+          
+        }
         
-        update_tabel();
-        auto_number();
-        kosongkan_text();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void id_kItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_id_kItemStateChanged
-tampil_kriteria();                                              
+        tampil_kriteria();
+        tabel_kriteria();
 //    DefaultTableModel tabelTampil1 = new DefaultTableModel();
 //    tabelTampil1.addColumn("ID BK");
 //    tabelTampil1.addColumn("ID Kriteria");
@@ -611,12 +650,16 @@ tampil_kriteria();
     }//GEN-LAST:event_id_kItemStateChanged
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-dispose();        // TODO add your handling code here:
+        dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-kosongkan_text();        // TODO add your handling code here:
+        kosongkan_text();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void id_kKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_kKeyReleased
+        tabel_kriteria();
+    }//GEN-LAST:event_id_kKeyReleased
 
     /**
      * @param args the command line arguments
