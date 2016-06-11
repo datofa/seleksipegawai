@@ -517,6 +517,7 @@ public class laman_pegawai extends javax.swing.JFrame {
   try {
             String value1 = id_peg.getText();
             String value2 = nm_peg.getText();
+<<<<<<< HEAD
 //           Object value3=jk.getSelectedItem();
 //             Date value4 = tglhr.getDate();
             java.util.Date value4= (java.util.Date) this.tglhr.getDate();
@@ -524,6 +525,13 @@ public class laman_pegawai extends javax.swing.JFrame {
             String sql ="update pegawai set nama='"+value2+"', jk='"+jeniska+"',tgl_lahir='"+new java.sql.Date(value4.getTime())+"',alamat='"+value5+"' where id_pegawai='"+value1+"'";
              System.out.println(sql);
                         java.sql.Connection conn;
+=======
+            java.util.Date value3= (java.util.Date) this.tglhr.getDate();
+            String value4 = alamat_peg.getText();
+            String sql ="update pegawai set nama='"+value2+"', jk='"+jeniska+"',tgl_lahir='"+new java.sql.Date(value3.getTime())+"',alamat='"+value4+"' where id_pegawai='"+value1+"'";
+            System.out.println(sql);
+            java.sql.Connection conn;
+>>>>>>> 726e1595deaea6664d6fb5675f01afa1ae80e343
             conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
             pst.execute();

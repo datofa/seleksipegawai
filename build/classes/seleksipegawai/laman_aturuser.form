@@ -88,9 +88,15 @@
           <Component id="jInternalFrame4" alignment="0" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
+<<<<<<< HEAD
                   <EmptySpace min="0" pref="316" max="32767" attributes="0"/>
                   <Component id="jInternalFrame2" min="-2" pref="0" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="316" max="32767" attributes="0"/>
+=======
+                  <EmptySpace min="0" pref="320" max="32767" attributes="0"/>
+                  <Component id="jInternalFrame2" min="-2" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="320" max="32767" attributes="0"/>
+>>>>>>> 726e1595deaea6664d6fb5675f01afa1ae80e343
               </Group>
           </Group>
       </Group>
@@ -376,7 +382,11 @@
                   <Component id="jScrollPane2" min="-2" pref="240" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+<<<<<<< HEAD
                   <EmptySpace pref="83" max="32767" attributes="0"/>
+=======
+                  <EmptySpace pref="91" max="32767" attributes="0"/>
+>>>>>>> 726e1595deaea6664d6fb5675f01afa1ae80e343
               </Group>
           </Group>
         </DimensionLayout>
@@ -801,10 +811,18 @@
                           <Font name="Century Gothic" size="12" style="0"/>
                         </Property>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+<<<<<<< HEAD
                           <StringArray count="3">
                             <StringItem index="0" value="Admin"/>
                             <StringItem index="1" value="HRD"/>
                             <StringItem index="2" value="Manager"/>
+=======
+                          <StringArray count="4">
+                            <StringItem index="0" value="Admin"/>
+                            <StringItem index="1" value="HRD"/>
+                            <StringItem index="2" value="Supervisor"/>
+                            <StringItem index="3" value="Manager"/>
+>>>>>>> 726e1595deaea6664d6fb5675f01afa1ae80e343
                           </StringArray>
                         </Property>
                       </Properties>
