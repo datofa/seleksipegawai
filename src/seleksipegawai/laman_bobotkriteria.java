@@ -255,6 +255,11 @@ koneksi1 koneksi;
                 id_kActionPerformed(evt);
             }
         });
+        id_k.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                id_kKeyReleased(evt);
+            }
+        });
 
         nm_k.setEditable(false);
         nm_k.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -265,7 +270,6 @@ koneksi1 koneksi;
         });
 
         id_bk.setEditable(false);
-        id_bk.setBackground(new java.awt.Color(240, 240, 240));
         id_bk.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
         nm_bk.setBackground(new java.awt.Color(240, 240, 240));
@@ -455,7 +459,7 @@ koneksi1 koneksi;
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -617,6 +621,10 @@ dispose();        // TODO add your handling code here:
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
 kosongkan_text();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void id_kKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_kKeyReleased
+        
+    }//GEN-LAST:event_id_kKeyReleased
 
     /**
      * @param args the command line arguments
