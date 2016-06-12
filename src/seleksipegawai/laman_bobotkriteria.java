@@ -45,7 +45,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                 conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                 java.sql.Statement stm = conn.createStatement();
                 java.sql.ResultSet sql;
-                sql = stm.executeQuery("Select * from bobot_kriteria");
+                sql = stm.executeQuery("Select bk.id_bk,k.id_kriteria, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria");
     //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
                 jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
 
@@ -54,12 +54,12 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         }
         else{
             try {
-                System.out.println("t_kriteria");
+//                System.out.println("t_kriteria");
                 java.sql.Connection conn;
                 conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                 java.sql.Statement stm = conn.createStatement();
                 java.sql.ResultSet sql;
-                String query = "Select * from bobot_kriteria where id_kriteria='" + id_k.getSelectedItem() +"' ";
+                String query = "Select bk.id_bk,k.id_kriteria, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria where kriteria='" + id_k.getSelectedItem() +"' ";
                 System.out.println(query);
                 sql = stm.executeQuery(query);
     //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
@@ -119,9 +119,9 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
 
         try {
             koneksi();
-            resultSet = statement.executeQuery("select id_kriteria from kriteria");
+            resultSet = statement.executeQuery("select kriteria from kriteria");
             while (resultSet.next()) {
-                String sa = resultSet.getString("id_kriteria");
+                String sa = resultSet.getString("kriteria");
                 id_k.addItem(sa);
 
             }
@@ -131,8 +131,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
 
     private void kosongkan_text() {
         id_k.getSelectedItem();
-        nm_k.setText("");
-        id_bf.setText("");
+        bobot_bf.setText("");
         id_bk.setText("");
         nm_bk.setText("");
         bobot_bk.setText("");
@@ -144,12 +143,11 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     private void tampil_kriteria() {
         try {
             koneksi();
-            sql = "select * from kriteria where id_kriteria='" + id_k.getSelectedItem() + "'";
+            sql = "select bf.bobot from bobot_fuzzy bf join kriteria kr on bf.id_bobotfuzzy=kr.id_bobotfuzzy where kriteria='" + id_k.getSelectedItem() + "'";
             statement = (Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                nm_k.setText(resultSet.getString("kriteria"));
-                id_bf.setText(resultSet.getString("id_bobotfuzzy"));
+                bobot_bf.setText(resultSet.getString("bf.bobot"));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, statement);
@@ -174,12 +172,10 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         id_k = new javax.swing.JComboBox();
-        nm_k = new javax.swing.JTextField();
         id_bk = new javax.swing.JTextField();
         nm_bk = new javax.swing.JTextField();
         bobot_bk = new javax.swing.JTextField();
@@ -190,7 +186,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         y = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
-        id_bf = new javax.swing.JTextField();
+        bobot_bf = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -261,9 +257,6 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel1.setText("ID Kriteria                           :");
 
-        jLabel2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel2.setText("Kriteria                                :");
-
         jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel3.setText("ID Bobot Kriteria               :");
 
@@ -287,14 +280,6 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         id_k.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 id_kKeyReleased(evt);
-            }
-        });
-
-        nm_k.setEditable(false);
-        nm_k.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        nm_k.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nm_kActionPerformed(evt);
             }
         });
 
@@ -337,7 +322,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(x, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -349,7 +334,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(jLabel7)))
-                .addGap(78, 78, 78))
+                .addGap(63, 63, 63))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -373,11 +358,11 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
             }
         });
 
-        id_bf.setEditable(false);
-        id_bf.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        bobot_bf.setEditable(false);
+        bobot_bf.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
         jLabel9.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel9.setText("ID Bobot Fuzzy                   :");
+        jLabel9.setText("Bobot Fuzzy                        :");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -386,34 +371,29 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton7))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(13, 13, 13)
+                                .addComponent(id_k, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(nm_bk, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                                    .addComponent(id_bk)
-                                    .addComponent(bobot_bk)))
-                            .addComponent(jButton7)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
                                     .addComponent(jLabel9)
-                                    .addComponent(jLabel1))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(id_k, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(nm_k, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                                        .addComponent(id_bf)))))))
-                .addGap(28, 28, 28))
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(bobot_bk)
+                                    .addComponent(nm_bk)
+                                    .addComponent(bobot_bf, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(id_bk, javax.swing.GroupLayout.Alignment.TRAILING))))))
+                .addGap(37, 37, 37))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -422,31 +402,27 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(id_k, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(nm_k, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(id_bf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(id_bk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nm_bk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bobot_bk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(bobot_bf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(id_bk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(nm_bk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(bobot_bk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(jButton7)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jTable1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -474,13 +450,11 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
-            .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jInternalFrame1Layout.setVerticalGroup(
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -488,9 +462,9 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -501,7 +475,9 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jInternalFrame1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1, Short.MAX_VALUE))
         );
 
         pack();
@@ -531,10 +507,6 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_yActionPerformed
 
-    private void nm_kActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nm_kActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nm_kActionPerformed
-
     private void id_kActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_kActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_id_kActionPerformed
@@ -552,16 +524,12 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
 
                 String add1 = sql.getString("id_bk");
                 id_bk.setText(add1);
-                Object add2 = sql.getString("id_kriteria");
-                id_k.getSelectedItem();
-                String add3 = sql.getString("nm_bk");
-                nm_bk.setText(add3);
-                String add4 = sql.getString("nilai_bk");
-                bobot_bk.setText(add4);
-                String add5 = sql.getString("x");
-                x.setText(add5);
-                String add6 = sql.getString("y");
-                y.setText(add6);
+                String add3 = sql.getString("nilai_bk");
+                bobot_bk.setText(add3);
+                String add4 = sql.getString("x");
+                x.setText(add4);
+                String add5 = sql.getString("y");
+                y.setText(add5);
 
             }
         } catch (Exception e) {
@@ -569,6 +537,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
         try {
             String sql;
             sql = "insert into bobot_kriteria values('" + id_bk.getText() + "','" + id_k.getSelectedItem() + "','" + nm_bk.getText() + "','" + bobot_bk.getText() + "','" + x.getText() + "','" + y.getText() + "')";
@@ -698,8 +667,8 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField bobot_bf;
     private javax.swing.JTextField bobot_bk;
-    private javax.swing.JTextField id_bf;
     private javax.swing.JTextField id_bk;
     private javax.swing.JComboBox id_k;
     private javax.swing.JButton jButton2;
@@ -710,7 +679,6 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -724,7 +692,6 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTextField nm_bk;
-    private javax.swing.JTextField nm_k;
     private javax.swing.JTextField x;
     private javax.swing.JTextField y;
     // End of variables declaration//GEN-END:variables

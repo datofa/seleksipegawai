@@ -36,7 +36,7 @@ public class laman_kriteria extends javax.swing.JFrame {
 //   
 //    } catch (Exception e) {
 //     }}
- Object header[] = {"ID KRITERIA", "NAMA KRITERIA", "ID BOBOT FUZZY","NAMA BOBOT FUZZY", "BOBOT FUZZY"};
+        Object header[] = {"ID KRITERIA", "NAMA KRITERIA", "ID BOBOT FUZZY","NAMA BOBOT FUZZY", "BOBOT FUZZY"};
         DefaultTableModel defaultTableModel = new DefaultTableModel(null, header);
         jTable1.setModel(defaultTableModel);
 
