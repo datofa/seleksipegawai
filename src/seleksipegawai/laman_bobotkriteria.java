@@ -8,6 +8,7 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -129,17 +130,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         }
     }
 
-    private void kosongkan_text() {
-        id_k.getSelectedItem();
-        bobot_bf.setText("");
-        id_bk.setText("");
-        nm_bk.setText("");
-        bobot_bk.setText("");
-        x.setText("");
-        y.setText("");
-        auto_number();
-    }
-
+   
     private void tampil_kriteria() {
         try {
             koneksi();
@@ -153,7 +144,32 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, statement);
         }
     }
+    
+    public String getIdKriteria() {
+        String id_kriteria = "";
+        String sql = "SELECT id_kriteria FROM kriteria WHERE kriteria='" + id_k.getSelectedItem() + "'";
+        try {
+            java.sql.Statement statement = con.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                id_kriteria = resultSet.getString(1);
+            }
+        } catch (SQLException e) {
 
+        }
+        return id_kriteria;
+    }
+    
+    private void kosongkan_text() {
+           id_k.getSelectedItem();
+           bobot_bf.setText("");
+           id_bk.setText("");
+           nm_bk.setText("");
+           bobot_bk.setText("");
+           x.setText("");
+           y.setText("");
+           auto_number();
+       }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -540,7 +556,8 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         
         try {
             String sql;
-            sql = "insert into bobot_kriteria values('" + id_bk.getText() + "','" + id_k.getSelectedItem() + "','" + nm_bk.getText() + "','" + bobot_bk.getText() + "','" + x.getText() + "','" + y.getText() + "')";
+            sql = "insert into bobot_kriteria values('" + id_bk.getText() + "','" + getIdKriteria() + "','" + nm_bk.getText() + "','" + bobot_bk.getText() + "','" + x.getText() + "','" + y.getText() + "')";
+            System.out.println(sql);
             java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
             pst.execute();
