@@ -500,6 +500,9 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Menghapus Data?", "Title on Box", dialogButton);
+        if(dialogResult == 0) {
         try {
             String sql = "delete from bobot_kriteria where id_bk=? ";
             java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
@@ -507,8 +510,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
 
             pst.setString(1, id_bk.getText());
             pst.execute();
-
-            JOptionPane.showMessageDialog(null, "Hapus");
+            JOptionPane.showMessageDialog(null, "Berhasil Dihapus");
 
 
         } catch (Exception e) {
@@ -516,7 +518,8 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         tabel_kriteria();
         auto_number();
         kosongkan_text();
-
+          } else {
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void yActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yActionPerformed
@@ -554,7 +557,12 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Insert?", "Title on Box", dialogButton);
+        if(dialogResult == 0) {  
+        if(id_k.getSelectedItem()==""){
+              JOptionPane.showMessageDialog(null,"ID Kriteria Masih Kosong");
+          }else{
         try {
             String sql;
             sql = "insert into bobot_kriteria values('" + id_bk.getText() + "','" + getIdKriteria() + "','" + nm_bk.getText() + "','" + bobot_bk.getText() + "','" + x.getText() + "','" + y.getText() + "')";
@@ -565,11 +573,13 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
-        }
+        }}
 
         tabel_kriteria();
         auto_number();
-        kosongkan_text();
+        kosongkan_text(); 
+        } else {
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -584,14 +594,13 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                     String value5 = x.getText();
                     String value6 = y.getText();
 
-                    String sql = "update bobot_kriteria set  id_kriteria='" + getIdKriteria() + "',nm_bk='" + value3 + "',nilai_bk='" + value4 + "',x='" + value5 + "',y='" + value6 + "' where id_bk='" + value1 + "'";
+                    String sql = "update bobot_kriteria set nm_bk='" + value3 + "',nilai_bk='" + value4 + "',x='" + value5 + "',y='" + value6 + "' where id_bk='" + value1 + "'";
                     System.out.println(sql);
                     java.sql.Connection conn;
                     conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                     java.sql.PreparedStatement pst = conn.prepareStatement(sql);
                     pst.execute();
-
-//                    JOptionPane.showMessageDialog(null, "Edit ?");
+                    JOptionPane.showMessageDialog(null, "Berhasil Diedit");
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error");
                 }
