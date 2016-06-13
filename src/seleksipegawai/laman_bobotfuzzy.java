@@ -5,11 +5,22 @@
 package seleksipegawai;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
+import java.io.File;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 /**
  *
  * @author zuni
@@ -21,6 +32,10 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
     Statement statement;
      public String sql = "";
     private Connection con;
+    JasperReport JasRep;
+    JasperPrint JasPri;
+    Map param=new HashMap();
+    JasperDesign JasDes;
  
 //     Object[] judul_kolom = {"Kode Barang","Nama Barang","Harga Beli","Harga Jual","Quantity"};
             
@@ -201,6 +216,11 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
         jButton4.setFocusable(false);
         jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         jToolBar2.add(jButton4);
 
         jButton5.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -326,7 +346,7 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -447,6 +467,11 @@ try {
     private void id_bfPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_id_bfPropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_id_bfPropertyChange
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+       
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments

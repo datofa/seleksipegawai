@@ -37,6 +37,10 @@ public class laman_pegawai extends javax.swing.JFrame {
     Statement statement;
      public String sql = "";
     private Connection con;
+    JasperReport JasRep;
+    JasperPrint JasPri;
+    Map param=new HashMap();
+    JasperDesign JasDes;
     
   DefaultTableModel tabMode;
   private void update_tabel(){
@@ -90,41 +94,41 @@ public class laman_pegawai extends javax.swing.JFrame {
          SimpleDateFormat format = new SimpleDateFormat ("dd MMMMM yyyy");
     }
     
-     private void cetak(){
-    try{
-    koneksi();
-     Map<String, Object> param = new HashMap<String, Object>();
-     try{
-         JasperPrint jasperPrint = JasperFillManager.fillReport("src/Laporan/laporan_pegawai.jasper", param, con);
-          param.put("idpeg",id_peg.getText());   
-         JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-         jasperViewer.setTitle("Laporan Data Pegawai");
-         jasperViewer.setVisible(true);
-         
-     }catch (Exception e){
-         JOptionPane.showMessageDialog(rootPane,"Dokumen Tidak Ada "+e);
-         
-     }
-     
-    }catch (Exception e){
-        System.out.println(e);
-    }}
-    
-    public class Fungsi_Cetak{
-        public Fungsi_Cetak(String namaReport){
-            try{
-               koneksi();
-               File report_file= new File(namaReport);
-               JasperReport jasperReport = (JasperReport) JRLoader.loadObject(report_file.getPath());
-               JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,null,con);
-               
-               JasperViewer.viewReport(jasperPrint, false);
-               
-            }catch(Exception e){
-                System.out.println(e.getMessage());
-            }
-        }
-    }
+//     private void cetak(){
+//    try{
+//    koneksi();
+//     Map<String, Object> param = new HashMap<String, Object>();
+//     try{
+//         JasperPrint jasperPrint = JasperFillManager.fillReport("src/Laporan/laporan_pegawai.jasper", param, con);
+//          param.put("idpeg",id_peg.getText());   
+//         JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+//         jasperViewer.setTitle("Laporan Data Pegawai");
+//         jasperViewer.setVisible(true);
+//         
+//     }catch (Exception e){
+//         JOptionPane.showMessageDialog(rootPane,"Dokumen Tidak Ada "+e);
+//         
+//     }
+//     
+//    }catch (Exception e){
+//        System.out.println(e);
+//    }}
+//    
+//    public class Fungsi_Cetak{
+//        public Fungsi_Cetak(String namaReport){
+//            try{
+//               koneksi();
+//               File report_file= new File(namaReport);
+//               JasperReport jasperReport = (JasperReport) JRLoader.loadObject(report_file.getPath());
+//               JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,null,con);
+//               
+//               JasperViewer.viewReport(jasperPrint, false);
+//               
+//            }catch(Exception e){
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//    }
     
      private void kosongkan_text(){
            id_peg.setText("");
@@ -508,40 +512,45 @@ public class laman_pegawai extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       String jeniska="L";
+         String jeniska="L";
         if (jk.getSelectedItem().equals("Laki-laki")) {
             jeniska="L";
         } else {
             jeniska= "P";
         }
-  try {
+//        try {
             String value1 = id_peg.getText();
             String value2 = nm_peg.getText();
-//           Object value3=jk.getSelectedItem();
-//             Date value4 = tglhr.getDate();
-            java.util.Date value4= (java.util.Date) this.tglhr.getDate();
-            String value5 = alamat_peg.getText();
-            String sql ="update pegawai set nama='"+value2+"', jk='"+jeniska+"',tgl_lahir='"+new java.sql.Date(value4.getTime())+"',alamat='"+value5+"' where id_pegawai='"+value1+"'";
-             System.out.println(sql);
-                        java.sql.Connection conn;
-            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-
-            JOptionPane.showMessageDialog(null, "Edit ?");
-       } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error");
-        }  
-       
-        update_tabel();
-        auto_number();
-        kosongkan_text();
+            java.util.Date tanggal = (java.util.Date) this.tglhr.getDate();
+            String value4=alamat_peg.getText();
+            String sql;
+            sql ="update pegawai set  nama='"+value2+"',jk='"+jeniska+"', tgl_lahir='"+new java.sql.Date(tanggal.getTime())+"',alamat='"+value4+"' where id_pegawai='"+value1+"'";
+            System.out.println(sql);
+//            java.sql.Connection conn;
+//            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+//            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+//            pst.execute();
+//            JOptionPane.showMessageDialog(null, "Edit ?");
+//        } catch (Exception e) {          
+//    JOptionPane.showMessageDialog(null, "Error");
+//        }  
+//        update_tabel();
+//        auto_number();
+//        kosongkan_text();
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-//              new Fungsi_Cetak("./src/laporan/laporan_pegawai.jasper");
-        cetak();
+//        try{
+//            File rprt =new File("laporan_pegawai.jasper");
+//            JasDes=JRXmlLoader.load(rprt);
+//            param.clear();
+//            JasRep=JasperCompileManager.compileReport(JasDes);
+//            JasPri=JasperFillManager.fillReport(JasRep, param, con);
+//            JasperViewer.viewReport(JasPri, false);
+//        }catch (Exception e){
+//            JOptionPane.showMessageDialog(null, e);
+//        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

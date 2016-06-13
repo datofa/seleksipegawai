@@ -46,7 +46,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                 conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                 java.sql.Statement stm = conn.createStatement();
                 java.sql.ResultSet sql;
-                sql = stm.executeQuery("Select bk.id_bk,k.id_kriteria, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria");
+                sql = stm.executeQuery("Select bk.id_bk, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria");
     //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
                 jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
 
@@ -60,7 +60,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                 conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                 java.sql.Statement stm = conn.createStatement();
                 java.sql.ResultSet sql;
-                String query = "Select bk.id_bk,k.id_kriteria, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria where kriteria='" + id_k.getSelectedItem() +"' ";
+                String query = "Select bk.id_bk, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria where kriteria='" + id_k.getSelectedItem() +"' ";
                 System.out.println(query);
                 sql = stm.executeQuery(query);
     //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
@@ -537,9 +537,10 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet sql = stm.executeQuery("select * from bobot_kriteria where id_bk='" + tabel_klik + "'");
             if (sql.next()) {
-
                 String add1 = sql.getString("id_bk");
                 id_bk.setText(add1);
+                String add2 = sql.getString("nm_bk");
+                nm_bk.setText(add2);
                 String add3 = sql.getString("nilai_bk");
                 bobot_bk.setText(add3);
                 String add4 = sql.getString("x");
@@ -574,24 +575,23 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
         int dialogButton = JOptionPane.YES_NO_OPTION;
-        int dialogResult = JOptionPane.showConfirmDialog(this, "Your Message", "Title on Box", dialogButton);
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Edit?", "Title on Box", dialogButton);
         if(dialogResult == 0) {
                 try {
                     String value1 = id_bk.getText();
-                    Object value2 = id_k.getSelectedItem();
                     String value3 = nm_bk.getText();
                     String value4 = bobot_bk.getText();
                     String value5 = x.getText();
                     String value6 = y.getText();
 
-                    String sql = "update bobot_kriteria set  id_kriteria='" + value2 + "',nm_bk='" + value3 + "',nilai_bk='" + value4 + "',x='" + value5 + "',y='" + value6 + "' where id_bk='" + value1 + "'";
+                    String sql = "update bobot_kriteria set  id_kriteria='" + getIdKriteria() + "',nm_bk='" + value3 + "',nilai_bk='" + value4 + "',x='" + value5 + "',y='" + value6 + "' where id_bk='" + value1 + "'";
                     System.out.println(sql);
                     java.sql.Connection conn;
                     conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                     java.sql.PreparedStatement pst = conn.prepareStatement(sql);
                     pst.execute();
 
-                    JOptionPane.showMessageDialog(null, "Edit ?");
+//                    JOptionPane.showMessageDialog(null, "Edit ?");
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error");
                 }
