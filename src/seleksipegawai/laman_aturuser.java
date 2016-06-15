@@ -573,7 +573,7 @@ public class laman_aturuser extends javax.swing.JFrame {
         });
 
         level_user2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        level_user2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Admin", "HRD", "Manager" }));
+        level_user2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Admin", "HRD", "Supervisor", "Manager" }));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -768,7 +768,7 @@ public class laman_aturuser extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -789,9 +789,9 @@ public class laman_aturuser extends javax.swing.JFrame {
             .addComponent(jInternalFrame4)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 314, Short.MAX_VALUE)
+                    .addGap(0, 318, Short.MAX_VALUE)
                     .addComponent(jInternalFrame2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 314, Short.MAX_VALUE)))
+                    .addGap(0, 318, Short.MAX_VALUE)))
         );
 
         pack();
@@ -860,11 +860,11 @@ dispose();        // TODO add your handling code here:
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         int level=1;
-        if (level_user.getSelectedItem().equals("Admin")) {
+        if (level_user2.getSelectedItem().equals("Admin")) {
             level = 1;
-        } else if (level_user.getSelectedItem().equals("HRD")) {
+        } else if (level_user2.getSelectedItem().equals("HRD")) {
             level = 2;
-        } else if (level_user.getSelectedItem().equals("Supervisor")) {
+        } else if (level_user2.getSelectedItem().equals("Supervisor")) {
             level = 3;
         } else {
             level = 4;
