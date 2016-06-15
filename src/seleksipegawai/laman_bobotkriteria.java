@@ -25,53 +25,66 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     private Connection con;
     DefaultTableModel tabMode;
 
-//    private void update_tabel() {
-//        try {
-//            java.sql.Connection conn;
-//            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-//            java.sql.Statement stm = conn.createStatement();
-//            java.sql.ResultSet sql;
-//            sql = stm.executeQuery("Select * from bobot_kriteria");
-////        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
-//            jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
-//
-//        } catch (Exception e) {
-//        }
-//    }
-
     private void tabel_kriteria() {
-        if(id_k.getSelectedItem()==""){
-            try {
-                java.sql.Connection conn;
-                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-                java.sql.Statement stm = conn.createStatement();
-                java.sql.ResultSet sql;
-                sql = stm.executeQuery("Select bk.id_bk, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria");
-    //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
-                jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
+         if(id_k.getSelectedItem()==""){
+            Object header[] = {"ID", "Nama", "Nilai","Batas Awal","Batas Akhir"};
+            DefaultTableModel defaultTableModel = new DefaultTableModel(null, header);
+            jTable1.setModel(defaultTableModel);
 
-            } catch (Exception e) {
+            //menghapus tabel sebelum menampilkan data
+            int baris = jTable1.getRowCount();
+            for (int i = 0; i < baris; i++) {
+                defaultTableModel.removeRow(i);
             }
-        }
+             String sql ="Select bk.id_bk, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria" ;
+             try {
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                String kolom1 = resultSet.getString(1);
+                String kolom2 = resultSet.getString(2);
+                String kolom3 = resultSet.getString(3);
+                String kolom4 = resultSet.getString(4);
+                String kolom5 = resultSet.getString(5);
+                
+                String kolom[] = {kolom1, kolom2,kolom3,kolom4,kolom5};
+                defaultTableModel.addRow(kolom);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            System.out.println("" + e.getMessage());
+        } 
+         }
         else{
-            try {
-//                System.out.println("t_kriteria");
-                java.sql.Connection conn;
-                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-                java.sql.Statement stm = conn.createStatement();
-                java.sql.ResultSet sql;
-                String query = "Select bk.id_bk, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria where kriteria='" + id_k.getSelectedItem() +"' ";
-                System.out.println(query);
-                sql = stm.executeQuery(query);
-    //        sql = stm.executeQuery("Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'");
-                jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
+            Object header[] = {"ID", "Nama", "Nilai","Batas Awal","Batas Akhir"};
+            DefaultTableModel defaultTableModel = new DefaultTableModel(null, header);
+            jTable1.setModel(defaultTableModel);
 
+            //menghapus tabel sebelum menampilkan data
+            int baris = jTable1.getRowCount();
+            for (int i = 0; i < baris; i++) {
+                defaultTableModel.removeRow(i);
+            }
+             String sql = "Select bk.id_bk, bk.nm_bk, bk.nilai_bk, bk.x, bk.y from bobot_kriteria bk join kriteria k on bk.id_kriteria=k.id_kriteria where kriteria='" + id_k.getSelectedItem() +"' ";
+            try {
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                String kolom1 = resultSet.getString(1);
+                String kolom2 = resultSet.getString(2);
+                String kolom3 = resultSet.getString(3);
+                String kolom4 = resultSet.getString(4);
+                String kolom5 = resultSet.getString(5);
+
+                String kolom[] = {kolom1, kolom2,kolom3,kolom4,kolom5};
+                defaultTableModel.addRow(kolom);
+            }
+//                System.out.println("t_kriteria");
             } catch (Exception e) {
             }
-        }
+        }}
         
-    }
-
     public laman_bobotkriteria() {
         initComponents();
         tampil_k();
@@ -145,6 +158,17 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         }
     }
     
+     private void kosongkan_text() {
+           id_k.getSelectedItem();
+           bobot_bf.setText("");
+           id_bk.setText("");
+           nm_bk.setText("");
+           bobot_bk.setText("");
+           x.setText("");
+           y.setText("");
+           auto_number();
+       }
+    
     public String getIdKriteria() {
         String id_kriteria = "";
         String sql = "SELECT id_kriteria FROM kriteria WHERE kriteria='" + id_k.getSelectedItem() + "'";
@@ -160,16 +184,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         return id_kriteria;
     }
     
-    private void kosongkan_text() {
-           id_k.getSelectedItem();
-           bobot_bf.setText("");
-           id_bk.setText("");
-           nm_bk.setText("");
-           bobot_bk.setText("");
-           x.setText("");
-           y.setText("");
-           auto_number();
-       }
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -338,9 +353,9 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(x, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(59, 59, 59)
                         .addComponent(jLabel6)
@@ -436,9 +451,9 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                     .addComponent(bobot_bk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton7)
-                .addContainerGap())
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         jTable1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -479,8 +494,8 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -491,9 +506,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+            .addComponent(jInternalFrame1)
         );
 
         pack();
@@ -531,7 +544,6 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
     }//GEN-LAST:event_id_kActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-
         try {
             int row = jTable1.getSelectedRow();
             String tabel_klik;
@@ -587,6 +599,9 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane.showConfirmDialog(this, "Edit?", "Title on Box", dialogButton);
         if(dialogResult == 0) {
+            if(id_k.getSelectedItem()==""){
+              JOptionPane.showMessageDialog(null,"ID KriteriaK osong");
+          }else{
                 try {
                     String value1 = id_bk.getText();
                     String value3 = nm_bk.getText();
@@ -603,7 +618,7 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Berhasil Diedit");
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error");
-                }
+                }}
 
                 tabel_kriteria();
                 auto_number();
@@ -611,39 +626,12 @@ public class laman_bobotkriteria extends javax.swing.JFrame {
         } else {
           
         }
-        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void id_kItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_id_kItemStateChanged
         tampil_kriteria();
         tabel_kriteria();
-//    DefaultTableModel tabelTampil1 = new DefaultTableModel();
-//    tabelTampil1.addColumn("ID BK");
-//    tabelTampil1.addColumn("ID Kriteria");
-//    tabelTampil1.addColumn("Nama ");
-//    tabelTampil1.addColumn("Nilai ");
-//    tabelTampil1.addColumn("Batas Awal ");
-//    tabelTampil1.addColumn("Batas Akhir");
-//     try{
-//            koneksi(); 
-//            String sql = "Select * from bobot_kriteria where id_kriteria like '%" + id_k.getSelectedItem()+ "%'" ;
-//            ResultSet rs = statement.executeQuery(sql);
-//            while (rs.next()) {
-//            tabelTampil1.addRow(new Object[]{
-//            rs.getString(1),
-//            rs.getString(2),
-//            rs.getString(3),
-//            rs.getString(4),
-//            rs.getString(5),
-//              rs.getString(6),
-//            });
-//            }
-//            jTable1.setModel(tabelTampil1);
-//
-//                }catch (Exception e){
-//            }
-//        
-//    
+
     }//GEN-LAST:event_id_kItemStateChanged
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed

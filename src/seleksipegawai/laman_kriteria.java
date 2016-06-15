@@ -26,17 +26,7 @@ public class laman_kriteria extends javax.swing.JFrame {
     
 // DefaultTableModel tabMode;
   private void update_tabel(){
-//    try {
-//  java.sql.Connection conn;
-//  conn = (java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
-//     java.sql.Statement stm = conn.createStatement();
-//    java.sql.ResultSet sql;
-//        sql = stm.executeQuery("select kriteria.id_kriteria, kriteria.kriteria,kriteria.id_bobotfuzzy,bobot_fuzzy.id_bobotfuzzy,bobot_fuzzy.huruf,bobot_fuzzy.bobot from kriteria inner join bobot_fuzzy on bobot_fuzzy.id_bobotfuzzy=kriteria.id_bobotfuzzy");
-//   jTable1.setModel(DbUtils.resultSetToTableModel(sql));
-//   
-//    } catch (Exception e) {
-//     }}
-        Object header[] = {"ID KRITERIA", "NAMA KRITERIA", "ID BOBOT FUZZY","NAMA BOBOT FUZZY", "BOBOT FUZZY"};
+        Object header[] = {"ID Kriteria", "Nama Kriteria", "ID Bobot Fuzzy", "Bobot Fuzzy"};
         DefaultTableModel defaultTableModel = new DefaultTableModel(null, header);
         jTable1.setModel(defaultTableModel);
 
@@ -47,7 +37,7 @@ public class laman_kriteria extends javax.swing.JFrame {
         }
 
 
-        String sql = "select kriteria.id_kriteria, kriteria.kriteria,kriteria.id_bobotfuzzy,bobot_fuzzy.huruf,bobot_fuzzy.bobot from kriteria inner join bobot_fuzzy on bobot_fuzzy.id_bobotfuzzy=kriteria.id_bobotfuzzy";
+        String sql = "select kriteria.id_kriteria, kriteria.kriteria,kriteria.id_bobotfuzzy,bobot_fuzzy.bobot from kriteria inner join bobot_fuzzy on bobot_fuzzy.id_bobotfuzzy=kriteria.id_bobotfuzzy";
         try {
             statement = (Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
@@ -57,10 +47,10 @@ public class laman_kriteria extends javax.swing.JFrame {
                 String kolom2 = resultSet.getString(2);
                 String kolom3 = resultSet.getString(3);
                 String kolom4 = resultSet.getString(4);
-                String kolom5 = resultSet.getString(5);
+               
 
 
-                String kolom[] = {kolom1, kolom2,kolom3,kolom4,kolom5};
+                String kolom[] = {kolom1, kolom2,kolom3,kolom4};
                 defaultTableModel.addRow(kolom);
             }
         } catch (Exception e) {
@@ -82,7 +72,6 @@ public class laman_kriteria extends javax.swing.JFrame {
     
     public final void tampil_bf(){
     id_bf.addItem("");
-
       try {
           koneksi();
           resultSet=statement.executeQuery("select id_bobotfuzzy from bobot_fuzzy");
@@ -93,7 +82,6 @@ public class laman_kriteria extends javax.swing.JFrame {
           }
       } catch (Exception e) {
       }
-      
     }
     
     private void koneksi() {
@@ -104,11 +92,11 @@ public class laman_kriteria extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }
+    
      private void kosongkan_text(){
      id_k.setText("");
      nm_k.setText("");
      id_bf.setSelectedItem("");
-     nm_bf.setText("");
       bobot_bf.setText("");
       auto_number();
        }
@@ -147,7 +135,6 @@ public class laman_kriteria extends javax.swing.JFrame {
             statement=(Statement) con.createStatement();
             resultSet=statement.executeQuery(sql);
            while (resultSet.next()) {
-                 nm_bf.setText(resultSet.getString("huruf"));
                   bobot_bf.setText(resultSet.getString("bobot"));
             }
             } catch (Exception e) {
@@ -177,8 +164,6 @@ public class laman_kriteria extends javax.swing.JFrame {
         id_k = new javax.swing.JTextField();
         nm_k = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        nm_bf = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         bobot_bf = new javax.swing.JTextField();
         id_bf = new javax.swing.JComboBox();
@@ -252,10 +237,10 @@ public class laman_kriteria extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel1.setText("ID Kriteria             :");
+        jLabel1.setText("ID Kriteria                         :");
 
         jLabel2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel2.setText("Kriteria                  :");
+        jLabel2.setText("Kriteria                              :");
 
         id_k.setEditable(false);
         id_k.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -269,21 +254,10 @@ public class laman_kriteria extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel3.setText("ID Bobot Fuzzy    :");
-
-        jLabel4.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel4.setText("Bobot Fuzzy         :");
-
-        nm_bf.setEditable(false);
-        nm_bf.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        nm_bf.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                nm_bfPropertyChange(evt);
-            }
-        });
+        jLabel3.setText("ID Bobot Fuzzy                 :");
 
         jLabel5.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel5.setText("Bobot                   :");
+        jLabel5.setText("Bobot Fuzzy                     :");
 
         bobot_bf.setEditable(false);
         bobot_bf.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -319,30 +293,27 @@ public class laman_kriteria extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton7)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(18, 18, 18)
-                            .addComponent(id_k, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(id_bf, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel2)
                             .addGap(18, 18, 18)
                             .addComponent(nm_k))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel3)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel1)
                             .addGap(18, 18, 18)
-                            .addComponent(id_bf, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(id_k, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButton7)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5))
+                            .addComponent(jLabel5)
                             .addGap(18, 18, 18)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(bobot_bf)
-                                .addComponent(nm_bf)))))
-                .addContainerGap(51, Short.MAX_VALUE))
+                            .addComponent(bobot_bf, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -352,38 +323,42 @@ public class laman_kriteria extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(id_k, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nm_k, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(nm_k, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(id_bf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(nm_bf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(bobot_bf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton7)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         jTable1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "NAMA", "ID BOBOT FUZZY", "NAMA BOBOT FUZZY", "BOBOT FUZZY"
+                "ID", "NAMA", "ID BOBOT FUZZY", " BOBOT FUZZY"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -397,21 +372,21 @@ public class laman_kriteria extends javax.swing.JFrame {
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(19, 19, 19)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jInternalFrame1Layout.setVerticalGroup(
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jInternalFrame1Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -424,7 +399,9 @@ public class laman_kriteria extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jInternalFrame1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -457,8 +434,7 @@ public class laman_kriteria extends javax.swing.JFrame {
         id_k.setText(jTable1.getValueAt(baris,0).toString());
         nm_k.setText(jTable1.getValueAt(baris,1).toString());
         id_bf.setSelectedItem(jTable1.getValueAt(baris, 2).toString());
-         nm_bf.setText(jTable1.getValueAt(baris,3).toString());
-          bobot_bf.setText(jTable1.getValueAt(baris,4).toString());
+          bobot_bf.setText(jTable1.getValueAt(baris,3).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void bobot_bfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bobot_bfActionPerformed
@@ -466,7 +442,10 @@ public class laman_kriteria extends javax.swing.JFrame {
     }//GEN-LAST:event_bobot_bfActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-             try {
+        if(id_bf.getSelectedItem()==""){
+              JOptionPane.showMessageDialog(null,"ID Kriteria Masih Kosong");
+          }else{   
+        try {
             String sql;
             sql = "insert into kriteria values('"+id_k.getText()+"','"+nm_k.getText()+"','"+id_bf.getSelectedItem()+"')";
             java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
@@ -481,6 +460,7 @@ public class laman_kriteria extends javax.swing.JFrame {
         update_tabel();
         auto_number();
         kosongkan_text();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void id_bfKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_bfKeyReleased
@@ -490,18 +470,16 @@ public class laman_kriteria extends javax.swing.JFrame {
 
     private void id_bfItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_id_bfItemStateChanged
 tampil_bobot();
-       
     }//GEN-LAST:event_id_bfItemStateChanged
-
-    private void nm_bfPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_nm_bfPropertyChange
-               // TODO add your handling code here:
-    }//GEN-LAST:event_nm_bfPropertyChange
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         if(id_bf.getSelectedItem()==""){
+              JOptionPane.showMessageDialog(null,"ID Kriteria Kosong");
+          }else{  
         try {
             String value1 = id_k.getText();
             String value2 = nm_k.getText();
@@ -516,7 +494,7 @@ dispose();        // TODO add your handling code here:
             JOptionPane.showMessageDialog(null, "Edit ?");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
-        }  
+        }  }
         
         update_tabel();
         auto_number();
@@ -600,13 +578,11 @@ dispose();        // TODO add your handling code here:
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JTextField nm_bf;
     private javax.swing.JTextField nm_k;
     // End of variables declaration//GEN-END:variables
 }
