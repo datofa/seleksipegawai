@@ -31,7 +31,7 @@ public class kriteria_periode extends javax.swing.JFrame {
     }
     
      public final void tampil_dfr(){
-    tampil_daftar.addItem("");
+     tampil_daftar.addItem("");
       try {
           koneksi();
           resultSet=statement.executeQuery("SELECT kriteria FROM kriteria");

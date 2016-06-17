@@ -37,7 +37,7 @@ public class laman_kriteria extends javax.swing.JFrame {
         }
 
 
-        String sql = "select kriteria.id_kriteria, kriteria.kriteria,kriteria.id_bobotfuzzy,bobot_fuzzy.bobot from kriteria inner join bobot_fuzzy on bobot_fuzzy.id_bobotfuzzy=kriteria.id_bobotfuzzy";
+        String sql = "select kriteria.id_kriteria, kriteria.kriteria,kriteria.id_bobotfuzzy,bobot_fuzzy.bobot from kriteria inner join bobot_fuzzy on bobot_fuzzy.id_bobotfuzzy=kriteria.id_bobotfuzzy order by id_kriteria asc";
         try {
             statement = (Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
@@ -408,33 +408,11 @@ public class laman_kriteria extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-//tampil_bobot();
-//        try {
-//  int row =jTable1.getSelectedRow();
-//       String tabel_klik;
-//          tabel_klik = (jTable1.getModel().getValueAt(row, 0).toString());
-//       java.sql.Connection conn =(java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
-//           java.sql.Statement stm = conn.createStatement();
-//        java.sql.ResultSet sql = stm.executeQuery("select kriteria.id_kriteria, kriteria.kriteria,kriteria.id_bobotfuzzy, bobot_fuzzy.id_bobotfuzzy,bobot_fuzzy.huruf,bobot_fuzzy.bobot from kriteria inner join bobot_fuzzy on bobot_fuzzy.id_bobotfuzzy=kriteria.id_bobotfuzzy where id_kriteria='"+tabel_klik+"'");
-//          if(sql.next()){
-//              String add1= sql.getString("id_kriteria");
-//              id_k.setText(add1);
-//             String add2 = sql.getString("kriteria");
-//               nm_k.setText(add2);
-//                String add3 = sql.getString("id_bobotfuzzy");
-//               id_bf.getSelectedItem();
-//               String add4=sql.getString("huruf");
-//               nm_bf.setText(add4);
-//               String add5=sql.getString("bobot");
-//               bobot_bf.setText(add5);
-//         }     }
-//            catch (Exception e) {
-//            }
-         int baris=jTable1.getSelectedRow();
+        int baris=jTable1.getSelectedRow();
         id_k.setText(jTable1.getValueAt(baris,0).toString());
         nm_k.setText(jTable1.getValueAt(baris,1).toString());
         id_bf.setSelectedItem(jTable1.getValueAt(baris, 2).toString());
-          bobot_bf.setText(jTable1.getValueAt(baris,3).toString());
+        bobot_bf.setText(jTable1.getValueAt(baris,3).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void bobot_bfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bobot_bfActionPerformed
@@ -478,19 +456,18 @@ dispose();        // TODO add your handling code here:
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
          if(id_bf.getSelectedItem()==""){
-              JOptionPane.showMessageDialog(null,"ID Kriteria Kosong");
+              JOptionPane.showMessageDialog(null,"ID Bobot Fuzzy Masih Kosong");
           }else{  
         try {
             String value1 = id_k.getText();
             String value2 = nm_k.getText();
             Object value3 = id_bf.getSelectedItem();
             String sql ="update kriteria set  kriteria='"+value2+"', id_bobotfuzzy='"+value3+"'where id_kriteria='"+value1+"'";
+            System.out.println(sql);
             java.sql.Connection conn;
             conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
             pst.execute();
-            jButton1.setEnabled(false);
-
             JOptionPane.showMessageDialog(null, "Edit ?");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
