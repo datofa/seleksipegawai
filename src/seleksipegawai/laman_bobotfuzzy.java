@@ -40,19 +40,8 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
 //     Object[] judul_kolom = {"Kode Barang","Nama Barang","Harga Beli","Harga Jual","Quantity"};
             
 //  DefaultTableModel tabMode;
-  private void update_tabel(){
-//    try {
-//  java.sql.Connection conn;
-//  conn = (java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
-//     java.sql.Statement stm = conn.createStatement();
-//    java.sql.ResultSet sql;
-//        sql = stm.executeQuery("select * from bobot_fuzzy");
-//   jTable1.setModel(DbUtils.resultSetToTableModel(sql));
-//   
-//    } catch (Exception e) {
-//     }}
- 
-  Object header[] = {"ID", "NAMA BOBOT FUZZY", "BOBOT FUZZY"};
+    private void update_tabel() {
+        Object header[] = {"ID", "NAMA BOBOT FUZZY", "BOBOT FUZZY"};
         DefaultTableModel defaultTableModel = new DefaultTableModel(null, header);
         jTable1.setModel(defaultTableModel);
 
@@ -61,8 +50,6 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
         for (int i = 0; i < baris; i++) {
             defaultTableModel.removeRow(i);
         }
-
-
         String sql = "select id_bobotfuzzy, huruf, bobot from bobot_fuzzy";
         try {
             statement = (Statement) con.createStatement();
@@ -72,27 +59,25 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
                 String kolom1 = resultSet.getString(1);
                 String kolom2 = resultSet.getString(2);
                 String kolom3 = resultSet.getString(3);
-
-
-
-                String kolom[] = {kolom1, kolom2,kolom3};
+                String kolom[] = {kolom1, kolom2, kolom3};
                 defaultTableModel.addRow(kolom);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             System.out.println("" + e.getMessage());
         }
-    
-  }
+    }
     /**
      * Creates new form laman_bobotfuzzy
      */
     public laman_bobotfuzzy() {
         initComponents();
+        koneksi1 koneksi = new koneksi1();
+        con = (Connection) koneksi.koneksi();
         auto_number();
         update_tabel();
         kosongkan_text();
-         
+
     }
     
      private void kosongkan_text(){
@@ -102,18 +87,9 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
         auto_number();
     }
      
-     private void koneksi() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
-
-        } catch (Exception e) {
-        }
-    }
-     
+    
    private void auto_number(){   
  try {
-   koneksi();
            String sql ="SELECT MAX(right(id_bobotfuzzy,2))AS no from bobot_fuzzy";
              statement = (Statement) con.createStatement();
           ResultSet rs= statement.executeQuery(sql);
@@ -171,6 +147,7 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jInternalFrame1.setTitle("Bobot Fuzzy");
         jInternalFrame1.setVisible(true);
 
         jToolBar2.setRollover(true);
@@ -346,7 +323,7 @@ public class laman_bobotfuzzy extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -370,97 +347,83 @@ dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         String huruf="",bobot="";
-         if(nm_bf.getText().equals(""))
-     {
-         JOptionPane.showConfirmDialog(null, "Nama Bobot Fuzzy  Tidak Boleh Kosong");
-        
-     }else if(bobot_bf.getText().equals("")) 
-     {
-         JOptionPane.showConfirmDialog(null,"Bobot Fuzzy Tidak Boleh Kosong" );
-     }else
-     {
-        try {
-            String sql;
-            sql = "insert into bobot_fuzzy values('"+id_bf.getText()+"','"+nm_bf.getText()+"','"+bobot_bf.getText()+"')";
-            java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+        String huruf = "", bobot = "";
+        if (nm_bf.getText().equals("")) {
+            JOptionPane.showConfirmDialog(null, "Nama Bobot Fuzzy  Tidak Boleh Kosong");
+
+        } else if (bobot_bf.getText().equals("")) {
+            JOptionPane.showConfirmDialog(null, "Bobot Fuzzy Tidak Boleh Kosong");
+        } else {
+            try {
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan Data?", "Title on Box", dialogButton);
+                if (dialogResult == 0) {
+                    String sql;
+                    sql = "insert into bobot_fuzzy values('" + id_bf.getText() + "','" + nm_bf.getText() + "','" + bobot_bf.getText() + "')";
+                    java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            update_tabel();
+            auto_number();
+            kosongkan_text();
         }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
-        update_tabel();
-        auto_number();
-        kosongkan_text();  }      // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-  try {
+        try {
             String value1 = id_bf.getText();
             String value2 = nm_bf.getText();
             String value3 = bobot_bf.getText();
-            String sql ="update bobot_fuzzy set  huruf='"+value2+"', bobot='"+value3+"' where id_bobotfuzzy='"+value1+"'";
-            java.sql.Connection conn;
-            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-
-            JOptionPane.showMessageDialog(null, "Edit ?");
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
+            if (dialogResult == 0) {
+                String sql = "update bobot_fuzzy set  huruf='" + value2 + "', bobot='" + value3 + "' where id_bobotfuzzy='" + value1 + "'";
+                java.sql.Connection conn;
+                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Berhasil Diubah");
+            } else {
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
         }
         update_tabel();
         auto_number();
         kosongkan_text();
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-try {
-            String sql ="delete from bobot_fuzzy where id_bobotfuzzy=? ";
-            java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-
-            pst.setString(1, id_bf.getText());
-            pst.execute();
-
-            JOptionPane.showMessageDialog(null, "Hapus");
-           
-
+        try {
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Hapus data ini?", "Title on Box", dialogButton);
+            if (dialogResult == 0) {
+                String sql = "delete from bobot_fuzzy where id_bobotfuzzy=? ";
+                java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setString(1, id_bf.getText());
+                pst.execute();
+                 JOptionPane.showMessageDialog(null, "Berhasil Dihapus");
+            } else {
+            }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
         update_tabel();
         auto_number();
         kosongkan_text();
-
-               // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-//try {
-//            int row =jTable1.getSelectedRow();
-//            String tabel_klik;
-//            tabel_klik = (jTable1.getModel().getValueAt(row, 0).toString());
-//            java.sql.Connection conn =(java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
-//            java.sql.Statement stm = conn.createStatement();
-//            java.sql.ResultSet sql = stm.executeQuery("select * from bobot_fuzzy where id_bobotfuzzy='"+tabel_klik+"'");
-//            if(sql.next()){
-//                String add1 = sql.getString("id_bobotfuzzy");
-//                id_bf.setText(add1);
-//                String add2 = sql.getString("huruf");
-//                nm_bf.setText(add2);
-//                String add3 = sql.getString("bobot");
-//                bobot_bf.setText(add3);
-//                
-//                
-//            }     }
-//            catch (Exception e) {
-//            }
-        int baris=jTable1.getSelectedRow();
-        id_bf.setText(jTable1.getValueAt(baris,0).toString());
-        nm_bf.setText(jTable1.getValueAt(baris,1).toString());
+        int baris = jTable1.getSelectedRow();
+        id_bf.setText(jTable1.getValueAt(baris, 0).toString());
+        nm_bf.setText(jTable1.getValueAt(baris, 1).toString());
         bobot_bf.setText(jTable1.getValueAt(baris, 2).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 

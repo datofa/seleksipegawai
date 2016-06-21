@@ -17,11 +17,10 @@ import net.proteanit.sql.DbUtils;
  * @author zuni
  */
 public class laman_kriteria extends javax.swing.JFrame {
-
     koneksi1 koneksi;
     ResultSet resultSet;
     Statement statement;
-     public String sql = "";
+    public String sql = "";
     private Connection con;
     
 // DefaultTableModel tabMode;
@@ -47,100 +46,86 @@ public class laman_kriteria extends javax.swing.JFrame {
                 String kolom2 = resultSet.getString(2);
                 String kolom3 = resultSet.getString(3);
                 String kolom4 = resultSet.getString(4);
-               
-
-
-                String kolom[] = {kolom1, kolom2,kolom3,kolom4};
+                String kolom[] = {kolom1, kolom2, kolom3, kolom4};
                 defaultTableModel.addRow(kolom);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             System.out.println("" + e.getMessage());
         }
-  
-  }
+    }
     /**
      * Creates new form laman_kriteria
      */
     public laman_kriteria() {
+        koneksi1 koneksi = new koneksi1();
+        con = (Connection) koneksi.koneksi();
         initComponents();
         tampil_bf();
         auto_number();
-         update_tabel();
-        kosongkan_text();  
+        update_tabel();
+        kosongkan_text();
     }
     
-    public final void tampil_bf(){
-    id_bf.addItem("");
-      try {
-          koneksi();
-          resultSet=statement.executeQuery("select id_bobotfuzzy from bobot_fuzzy");
-          while (resultSet.next()) {
-             String sa = resultSet.getString("id_bobotfuzzy");
-             id_bf.addItem(sa);
-
-          }
-      } catch (Exception e) {
-      }
-    }
-    
-    private void koneksi() {
+    public final void tampil_bf() {
+        id_bf.addItem("");
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
+            resultSet = statement.executeQuery("select id_bobotfuzzy from bobot_fuzzy");
+            while (resultSet.next()) {
+                String sa = resultSet.getString("id_bobotfuzzy");
+                id_bf.addItem(sa);
 
+            }
         } catch (Exception e) {
         }
     }
     
-     private void kosongkan_text(){
-     id_k.setText("");
-     nm_k.setText("");
-     id_bf.setSelectedItem("");
-      bobot_bf.setText("");
-      auto_number();
-       }
     
- private void auto_number(){   
- try {
-   koneksi();
-           String sql ="SELECT MAX(right(id_kriteria,2))AS no from kriteria";
-             statement = (Statement) con.createStatement();
-          ResultSet rs= statement.executeQuery(sql);
-         while (rs.next()) {
-               if (rs.first() == false){
-                id_k.setText("K001");
-               }else{
+    private void kosongkan_text() {
+        id_k.setText("");
+        nm_k.setText("");
+        id_bf.setSelectedItem("");
+        bobot_bf.setText("");
+        auto_number();
+    }
+    
+    private void auto_number() {
+        try {
+            String sql = "SELECT MAX(right(id_kriteria,2))AS no from kriteria";
+            statement = (Statement) con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                if (rs.first() == false) {
+                    id_k.setText("K001");
+                } else {
                     rs.last();
-                   int auto_id = rs.getInt(1) + 1;
-                  String no = String.valueOf(auto_id);
-                   int noLong=no.length();
-                   for (int a = 0; a< 3-noLong; a++){
-                       no= "0" + no;
-                   }
-                   id_k.setText("K" + no);
-                   
-               }
-           }
-     } catch (Exception e) {
-           JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
+                    int auto_id = rs.getInt(1) + 1;
+                    String no = String.valueOf(auto_id);
+                    int noLong = no.length();
+                    for (int a = 0; a < 3 - noLong; a++) {
+                        no = "0" + no;
+                    }
+                    id_k.setText("K" + no);
 
-     }
-       }
- 
- private void tampil_bobot(){
- try {
-           koneksi();
-           sql="select * from bobot_fuzzy where id_bobotfuzzy='"+id_bf.getSelectedItem()+"'";
-            statement=(Statement) con.createStatement();
-            resultSet=statement.executeQuery(sql);
-           while (resultSet.next()) {
-                  bobot_bf.setText(resultSet.getString("bobot"));
+                }
             }
-            } catch (Exception e) {
-          JOptionPane.showMessageDialog(rootPane, statement);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
         }
- }
+    }
+
+    private void tampil_bobot() {
+        try {
+            sql = "select * from bobot_fuzzy where id_bobotfuzzy='" + id_bf.getSelectedItem() + "'";
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                bobot_bf.setText(resultSet.getString("bobot"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, statement);
+        }
+    }
            
     /**
      * This method is called from within the constructor to initialize the form.
@@ -242,14 +227,24 @@ public class laman_kriteria extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel2.setText("Kriteria                              :");
 
-        id_k.setEditable(false);
+        id_k.setBackground(new java.awt.Color(240, 240, 240));
         id_k.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        id_k.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                id_kPropertyChange(evt);
+            }
+        });
 
         nm_k.setBackground(new java.awt.Color(240, 240, 240));
         nm_k.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         nm_k.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nm_kActionPerformed(evt);
+            }
+        });
+        nm_k.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                nm_kPropertyChange(evt);
             }
         });
 
@@ -386,7 +381,7 @@ public class laman_kriteria extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -420,24 +415,27 @@ public class laman_kriteria extends javax.swing.JFrame {
     }//GEN-LAST:event_bobot_bfActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(id_bf.getSelectedItem()==""){
-              JOptionPane.showMessageDialog(null,"ID Kriteria Masih Kosong");
-          }else{   
-        try {
-            String sql;
-            sql = "insert into kriteria values('"+id_k.getText()+"','"+nm_k.getText()+"','"+id_bf.getSelectedItem()+"')";
-            java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
-        
-        update_tabel();
-        auto_number();
-        kosongkan_text();
+        if (id_bf.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "ID Bobot Fuzzy Kosong");
+        } else {
+            try {
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan data?", "Validasi", dialogButton);
+                if (dialogResult == 0) {
+                    String sql;
+                    sql = "insert into kriteria values('" + id_k.getText() + "','" + nm_k.getText() + "','" + id_bf.getSelectedItem() + "')";
+                    java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            update_tabel();
+            auto_number();
+            kosongkan_text();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -455,42 +453,49 @@ dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         if(id_bf.getSelectedItem()==""){
-              JOptionPane.showMessageDialog(null,"ID Bobot Fuzzy Masih Kosong");
-          }else{  
-        try {
-            String value1 = id_k.getText();
-            String value2 = nm_k.getText();
-            Object value3 = id_bf.getSelectedItem();
-            String sql ="update kriteria set  kriteria='"+value2+"', id_bobotfuzzy='"+value3+"'where id_kriteria='"+value1+"'";
-            System.out.println(sql);
-            java.sql.Connection conn;
-            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Edit ?");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error");
-        }  }
-        
-        update_tabel();
-        auto_number();
-        kosongkan_text();
+         if (id_bf.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "ID Bobot Fuzzy Masih Kosong");
+        } else {
+            try {
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
+                if (dialogResult == 0) {
+                    String value1 = id_k.getText();
+                    String value2 = nm_k.getText();
+                    Object value3 = id_bf.getSelectedItem();
+                    String sql = "update kriteria set  kriteria='" + value2 + "', id_bobotfuzzy='" + value3 + "'where id_kriteria='" + value1 + "'";
+                    System.out.println(sql);
+                    java.sql.Connection conn;
+                    conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Diubah");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error");
+            }
+            update_tabel();
+            auto_number();
+            kosongkan_text();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            String sql ="delete from kriteria where id_kriteria=? ";
-            java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-
-            pst.setString(1, id_k.getText());
-            pst.execute();
-
-            JOptionPane.showMessageDialog(null, "Hapus");
-           
-
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Hapus data ini?", "Title on Box", dialogButton);
+            if (dialogResult == 0) {
+                String sql = "delete from kriteria where id_kriteria=? ";
+                java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setString(1, id_k.getText());
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Berhasil Dihapus");
+            } else {
+            }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
         update_tabel();
         auto_number();
@@ -504,6 +509,14 @@ dispose();        // TODO add your handling code here:
     private void nm_kActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nm_kActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nm_kActionPerformed
+
+    private void id_kPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_id_kPropertyChange
+        id_k.setEnabled(false);
+    }//GEN-LAST:event_id_kPropertyChange
+
+    private void nm_kPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_nm_kPropertyChange
+        nm_k.setEnabled(false);
+    }//GEN-LAST:event_nm_kPropertyChange
 
         
     /**

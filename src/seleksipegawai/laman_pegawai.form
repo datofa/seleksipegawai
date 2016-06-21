@@ -38,7 +38,7 @@
   <SubComponents>
     <Container class="javax.swing.JInternalFrame" name="jInternalFrame1">
       <Properties>
-        <Property name="title" type="java.lang.String" value="Pegawai"/>
+        <Property name="title" type="java.lang.String" value="Master Pegawai"/>
         <Property name="visible" type="boolean" value="true"/>
       </Properties>
 
@@ -63,7 +63,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="428" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="448" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               </Group>
           </Group>
