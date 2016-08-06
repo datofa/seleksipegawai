@@ -16,15 +16,14 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
-import net.sf.jasperreports.engine.JasperCompileManager;
+
+import java.util.Date;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
-import java.util.Date;
 
 /**
  *
@@ -35,11 +34,11 @@ public class laman_pegawai extends javax.swing.JFrame {
     koneksi1 koneksi;
     ResultSet resultSet;
     Statement statement;
-     public String sql = "";
+    public String sql = "";
     private Connection con;
     JasperReport JasRep;
     JasperPrint JasPri;
-    Map param=new HashMap();
+    Map param = new HashMap();
     JasperDesign JasDes;
     
   DefaultTableModel tabMode;
@@ -90,41 +89,41 @@ public class laman_pegawai extends javax.swing.JFrame {
          SimpleDateFormat format = new SimpleDateFormat ("dd MMMMM yyyy");
     }
     
-//     private void cetak(){
-//    try{
-//    koneksi();
-//     Map<String, Object> param = new HashMap<String, Object>();
-//     try{
-//         JasperPrint jasperPrint = JasperFillManager.fillReport("src/Laporan/laporan_pegawai.jasper", param, con);
-//          param.put("idpeg",id_peg.getText());   
-//         JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-//         jasperViewer.setTitle("Laporan Data Pegawai");
-//         jasperViewer.setVisible(true);
-//         
-//     }catch (Exception e){
-//         JOptionPane.showMessageDialog(rootPane,"Dokumen Tidak Ada "+e);
-//         
-//     }
-//     
-//    }catch (Exception e){
-//        System.out.println(e);
-//    }}
-//    
-//    public class Fungsi_Cetak{
-//        public Fungsi_Cetak(String namaReport){
-//            try{
-//               koneksi();
-//               File report_file= new File(namaReport);
-//               JasperReport jasperReport = (JasperReport) JRLoader.loadObject(report_file.getPath());
-//               JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,null,con);
-//               
-//               JasperViewer.viewReport(jasperPrint, false);
-//               
-//            }catch(Exception e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
+     private void cetak(){
+    try{
+     Map<String, Object> param = new HashMap<>();
+     try{
+         JasperPrint jasperPrint = JasperFillManager.fillReport("src/Laporan/laporan_pegawai.jasper", param, con);
+          param.put("idpeg",id_peg.getText());   
+         JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+         jasperViewer.setTitle("Laporan Data Pegawai");
+         jasperViewer.setVisible(true);
+         
+     }catch (Exception e){
+         JOptionPane.showMessageDialog(rootPane,"Dokumen Tidak Ada "+e);
+         
+     }
+     
+    }catch (Exception e){
+        System.out.println(e);
+    }}
+    
+    public class Fungsi_Cetak{
+        public Fungsi_Cetak(String namaReport){
+            try{
+               
+               File report_file= new File(namaReport);
+               JasperReport jasperReport = (JasperReport) JRLoader.loadObject(report_file.getPath());
+               JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,null,con);
+               
+               JasperViewer.viewReport(jasperPrint, false);
+               
+            }catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+    
     
     private void kosongkan_text() {
         id_peg.setText("");
@@ -159,6 +158,75 @@ public class laman_pegawai extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
         }
     }
+    
+    private void insert() {
+        java.util.Date tanggal = (java.util.Date) this.tglhr.getDate();
+        String jeniska = "L";
+        if (jk.getSelectedItem().equals("Laki-laki")) {
+            jeniska = "L";
+        } else {
+            jeniska = "P";
+        }
+        String nama = "", alamat = "";
+        if (nm_peg.getText().equals("")) {
+            JOptionPane.showConfirmDialog(null, "Nama Pegawai Tidak Boleh Kosong");
+        } else if (alamat_peg.getText().equals("")) {
+            JOptionPane.showConfirmDialog(null, "Alamat Pegawai Tidak Boleh Kosong");
+        } else {
+            try {
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan Data?", "Title on Box", dialogButton);
+                if (dialogResult == 0) {
+                    String sql;
+                    sql = "insert into pegawai values('" + id_peg.getText() + "','" + nm_peg.getText() + "','" + jeniska + "','" + new java.sql.Date(tanggal.getTime()) + "','" + alamat_peg.getText() + "')";
+                    System.out.println(sql);
+                    java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            update_tabel();
+            auto_number();
+            kosongkan_text();
+        }
+    }
+    
+    private void update() {
+        String jeniska = "L";
+        if (jk.getSelectedItem().equals("Laki-laki")) {
+            jeniska = "L";
+        } else {
+            jeniska = "P";
+        }
+        try {
+            String value1 = id_peg.getText();
+            String value2 = nm_peg.getText();
+            java.util.Date tanggal = (java.util.Date) this.tglhr.getDate();
+            String value4 = alamat_peg.getText();
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
+            if (dialogResult == 0) {
+                String sql = "update pegawai set  nama='" + value2 + "',jk='" + jeniska + "', tgl_lahir='" + new java.sql.Date(tanggal.getTime()) + "',alamat='" + value4 + "' where id_pegawai='" + value1 + "'";
+                System.out.println(sql);
+                java.sql.Connection conn;
+                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Berhasil Diubah");
+            } else {
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error");
+        }
+        update_tabel();
+        auto_number();
+        kosongkan_text();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -171,7 +239,6 @@ public class laman_pegawai extends javax.swing.JFrame {
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jToolBar1 = new javax.swing.JToolBar();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -209,18 +276,6 @@ public class laman_pegawai extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton2);
-
-        jButton3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jButton3.setText("Edit");
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(jButton3);
 
         jButton4.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jButton4.setText("Hapus");
@@ -402,7 +457,7 @@ public class laman_pegawai extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
                 .addGap(29, 29, 29))
         );
 
@@ -416,7 +471,7 @@ public class laman_pegawai extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jInternalFrame1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jInternalFrame1)
         );
 
         pack();
@@ -447,70 +502,28 @@ public class laman_pegawai extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        java.util.Date tanggal = (java.util.Date) this.tglhr.getDate();
-        String jeniska = "L";
-        if (jk.getSelectedItem().equals("Laki-laki")) {
-            jeniska = "L";
-        } else {
-            jeniska = "P";
-        }
-        String nama = "", alamat = "";
-        if (nm_peg.getText().equals("")) {
-            JOptionPane.showConfirmDialog(null, "Nama Pegawai Tidak Boleh Kosong");
-        } else if (alamat_peg.getText().equals("")) {
-            JOptionPane.showConfirmDialog(null, "Alamat Pegawai Tidak Boleh Kosong");
-        } else {
-            try {
-                int dialogButton = JOptionPane.YES_NO_OPTION;
-                int dialogResult = JOptionPane.showConfirmDialog(this, "Your Message", "Title on Box", dialogButton);
-                if (dialogResult == 0) {
-                    String sql;
-                    sql = "insert into pegawai values('" + id_peg.getText() + "','" + nm_peg.getText() + "','" + jeniska + "','" + new java.sql.Date(tanggal.getTime()) + "','" + alamat_peg.getText() + "')";
-                    System.out.println(sql);
-                    java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                    pst.execute();
-                    JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+        try {
+            String sql = "SELECT COUNT(*) FROM pegawai where id_pegawai='" + id_peg.getText() + "'";
+            System.out.println(sql);
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                int no = resultSet.getInt(1);
+                if (no > 0) {
+                    update();
                 } else {
+                    insert();
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
             }
-            update_tabel();
-            auto_number();
-            kosongkan_text();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         String jeniska="L";
-        if (jk.getSelectedItem().equals("Laki-laki")) {
-            jeniska="L";
-        } else {
-            jeniska="P";
-        }
-        try {
-            String value1 = id_peg.getText();
-            String value2 = nm_peg.getText();
-            java.util.Date tanggal = (java.util.Date) this.tglhr.getDate();
-            String value4=alamat_peg.getText();
-            String sql ="update pegawai set  nama='"+value2+"',jk='"+jeniska+"', tgl_lahir='"+new java.sql.Date(tanggal.getTime())+"',alamat='"+value4+"' where id_pegawai='"+value1+"'";
-            System.out.println(sql);
-            java.sql.Connection conn;
-            conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Edit ?");
-        } catch (Exception e) {          
-    JOptionPane.showMessageDialog(null, "Error");
-        }  
-        update_tabel();
-        auto_number();
-        kosongkan_text();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-//        try{
+        cetak();
+        //        try{
 //            File rprt =new File("laporan_pegawai.jasper");
 //            JasDes=JRXmlLoader.load(rprt);
 //            param.clear();
@@ -595,7 +608,6 @@ public class laman_pegawai extends javax.swing.JFrame {
     private javax.swing.JTextField id_peg;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;

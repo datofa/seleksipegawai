@@ -27,8 +27,10 @@ Statement statement;
     public static String userLogin="tidak terdeteksi";
   
     public laman_login() {
+        koneksi1 koneksi = new koneksi1();
+        con = (Connection) koneksi.koneksi();
         initComponents();
-        koneksi();
+//        koneksi();
       
     }
      void clear()
@@ -36,15 +38,15 @@ Statement statement;
     usernameField.setText("");
     passwordField.setText("");
     }
-     private void koneksi() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = (com.mysql.jdbc.Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
-
-        } catch (Exception e) {
-        }
-    }
-   
+//     private void koneksi() {
+//        try {
+//            Class.forName("com.mysql.jdbc.Driver");
+//            con = (com.mysql.jdbc.Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
+//
+//        } catch (Exception e) {
+//        }
+//    }
+//   
   private void prosesLogin() {
         String level = "";
         try {

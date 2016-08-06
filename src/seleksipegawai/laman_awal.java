@@ -3,42 +3,47 @@
  * and open the template in the editor.
  */
 package seleksipegawai;
+
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author zuni
  */
 public class laman_awal extends javax.swing.JFrame {
- public static int kodeLogin = 4;
+
+    public static int kodeLogin = 4;
     ResultSet resultSet;
     Statement statement;
     private Connection con;
+
     /**
      * Creates new form laman_awal
      */
     public laman_awal(int login) {
         initComponents();
-         JOptionPane.showMessageDialog(rootPane, "Selamat Datang di Sistem Seleksi Pegawai Teladan");
-         kodeLogin = login;
-        
+        JOptionPane.showMessageDialog(rootPane, "Selamat Datang di Sistem Seleksi Pegawai Teladan");
+        kodeLogin = login;
+
         if (login == 1) {
             loginAdmin();
         } else if (login == 2) {
             loginHRD();
-            } else if (login == 3) {
+        } else if (login == 3) {
             loginSupervisor();
         } else {
             loginManager();
-           
+
         }
     }
 
-   
-    
     private void koneksi() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -47,56 +52,66 @@ public class laman_awal extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }
-   
+
     private void loginAdmin() {
-       user.setEnabled(true);
+        user.setEnabled(true);
         pegawai.setEnabled(false);
-        bobot_fuzzy.setEnabled(false);
-         kriteria.setEnabled(false);
+        bf.setEnabled(false);
+        kriteria.setEnabled(false);
+        periode.setEnabled(false);
+        daftarkriteria.setEnabled(false);
         penilaian_pegawai.setEnabled(false);
-        
+
         mulai_analisa.setEnabled(false);
-       
+
 
         logout.setEnabled(true);
         keluar.setEnabled(true);
     }
-    
-    private void loginHRD(){
+
+    private void loginHRD() {
         user.setEnabled(false);
         pegawai.setEnabled(true);
-        bobot_fuzzy.setEnabled(false);
-         kriteria.setEnabled(false);
-         penilaian_pegawai.setEnabled(false);
-        
+        bf.setEnabled(false);
+        kriteria.setEnabled(false);
+        periode.setEnabled(false);
+        daftarkriteria.setEnabled(false);
+        penilaian_pegawai.setEnabled(false);
+
         mulai_analisa.setEnabled(false);
-       
+
 
         logout.setEnabled(true);
         keluar.setEnabled(true);
     }
-      private void loginSupervisor() {
-       user.setEnabled(false);
+
+    private void loginSupervisor() {
+        user.setEnabled(false);
         pegawai.setEnabled(false);
-        bobot_fuzzy.setEnabled(true);
-         kriteria.setEnabled(true);
+        bf.setEnabled(true);
+        kriteria.setEnabled(true);
+        periode.setEnabled(true);
+        daftarkriteria.setEnabled(true);
         penilaian_pegawai.setEnabled(true);
-        
+
         mulai_analisa.setEnabled(true);
-       
+
 
         logout.setEnabled(true);
         keluar.setEnabled(true);
-    }  
+    }
+
     private void loginManager() {
-         user.setEnabled(false);
+        user.setEnabled(false);
         pegawai.setEnabled(false);
-        bobot_fuzzy.setEnabled(false);
-         kriteria.setEnabled(false);
-         penilaian_pegawai.setEnabled(false);
-        
+        bf.setEnabled(false);
+        kriteria.setEnabled(false);
+        periode.setEnabled(false);
+        daftarkriteria.setEnabled(false);
+        penilaian_pegawai.setEnabled(false);
+
         mulai_analisa.setEnabled(false);
-       
+
 
         logout.setEnabled(true);
         keluar.setEnabled(true);
@@ -112,33 +127,46 @@ public class laman_awal extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         user = new javax.swing.JMenuItem();
         pegawai = new javax.swing.JMenuItem();
-        bobot_fuzzy = new javax.swing.JMenuItem();
         kriteria = new javax.swing.JMenuItem();
+        bf = new javax.swing.JMenuItem();
+        periode = new javax.swing.JMenuItem();
+        daftarkriteria = new javax.swing.JMenuItem();
         penilaian_pegawai = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         mulai_analisa = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         logout = new javax.swing.JMenuItem();
         keluar = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+
+        jLabel1.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel1.setFont(new java.awt.Font("Elephant", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("SISTEM SELEKSI PEGAWAI TELADAN");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 555, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(69, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(64, 64, 64))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 413, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(162, 162, 162)
+                .addComponent(jLabel1)
+                .addContainerGap(228, Short.MAX_VALUE))
         );
 
         jMenu1.setText("MASTER");
@@ -162,15 +190,6 @@ public class laman_awal extends javax.swing.JFrame {
         });
         jMenu1.add(pegawai);
 
-        bobot_fuzzy.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        bobot_fuzzy.setText("Bobot Fuzzy");
-        bobot_fuzzy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bobot_fuzzyActionPerformed(evt);
-            }
-        });
-        jMenu1.add(bobot_fuzzy);
-
         kriteria.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         kriteria.setText("Kriteria");
         kriteria.addActionListener(new java.awt.event.ActionListener() {
@@ -180,8 +199,40 @@ public class laman_awal extends javax.swing.JFrame {
         });
         jMenu1.add(kriteria);
 
+        bf.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        bf.setText("Bobot Preferensi");
+        bf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bfActionPerformed(evt);
+            }
+        });
+        jMenu1.add(bf);
+
+        periode.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        periode.setText("Periode");
+        periode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                periodeActionPerformed(evt);
+            }
+        });
+        jMenu1.add(periode);
+
+        daftarkriteria.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        daftarkriteria.setText("Daftar Kriteria Per Periode");
+        daftarkriteria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                daftarkriteriaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(daftarkriteria);
+
         penilaian_pegawai.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         penilaian_pegawai.setText("Penilaian Pegawai");
+        penilaian_pegawai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                penilaian_pegawaiActionPerformed(evt);
+            }
+        });
         jMenu1.add(penilaian_pegawai);
 
         jMenuBar1.add(jMenu1);
@@ -191,13 +242,14 @@ public class laman_awal extends javax.swing.JFrame {
 
         mulai_analisa.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         mulai_analisa.setText("Mulai Analisa");
+        mulai_analisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mulai_analisaActionPerformed(evt);
+            }
+        });
         jMenu2.add(mulai_analisa);
 
         jMenuBar1.add(jMenu2);
-
-        jMenu4.setText("LAPORAN ");
-        jMenu4.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
-        jMenuBar1.add(jMenu4);
 
         jMenu3.setText("KELUAR");
         jMenu3.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
@@ -239,30 +291,50 @@ public class laman_awal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
-  dispose();
-      new  laman_login().setVisible(true);        // TODO add your handling code here:
+        dispose();
+        new laman_login().setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_logoutActionPerformed
 
     private void pegawaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pegawaiActionPerformed
- new laman_pegawai().setVisible(true);      // TODO add your handling code here:
+        new laman_pegawai().setVisible(true);      // TODO add your handling code here:
     }//GEN-LAST:event_pegawaiActionPerformed
 
     private void keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarActionPerformed
-  JOptionPane.showMessageDialog(null, "Terima Kasih atas kunjungan anda!");
-        System.exit(0);       
+        JOptionPane.showMessageDialog(null, "Terima Kasih atas kunjungan anda!");
+        System.exit(0);
     }//GEN-LAST:event_keluarActionPerformed
 
     private void userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userActionPerformed
- new laman_aturuser().setVisible(true);      // TODO add your handling code here:
+        new laman_aturuser().setVisible(true);      // TODO add your handling code here:
     }//GEN-LAST:event_userActionPerformed
 
-    private void bobot_fuzzyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bobot_fuzzyActionPerformed
- new laman_bobotfuzzy().setVisible(true);        // TODO add your handling code here:
-    }//GEN-LAST:event_bobot_fuzzyActionPerformed
+    private void bfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bfActionPerformed
+        new laman_bobotfuzzy().setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_bfActionPerformed
 
     private void kriteriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kriteriaActionPerformed
- new laman_kriteria().setVisible(true);       // TODO add your handling code here:
+        new laman_kriteria().setVisible(true);       // TODO add your handling code here:
     }//GEN-LAST:event_kriteriaActionPerformed
+
+    private void periodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_periodeActionPerformed
+        new laman_inputperiode().setVisible(true);         // TODO add your handling code here:
+    }//GEN-LAST:event_periodeActionPerformed
+
+    private void daftarkriteriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_daftarkriteriaActionPerformed
+        try {
+            new kriteria_periode().setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(laman_awal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_daftarkriteriaActionPerformed
+
+    private void penilaian_pegawaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_penilaian_pegawaiActionPerformed
+        new laman_bkpeg().setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_penilaian_pegawaiActionPerformed
+
+    private void mulai_analisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mulai_analisaActionPerformed
+        new laman_seleksi().setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_mulai_analisaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -300,11 +372,12 @@ public class laman_awal extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem bobot_fuzzy;
+    private javax.swing.JMenuItem bf;
+    private javax.swing.JMenuItem daftarkriteria;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuItem keluar;
@@ -313,6 +386,7 @@ public class laman_awal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mulai_analisa;
     private javax.swing.JMenuItem pegawai;
     private javax.swing.JMenuItem penilaian_pegawai;
+    private javax.swing.JMenuItem periode;
     private javax.swing.JMenuItem user;
     // End of variables declaration//GEN-END:variables
 }

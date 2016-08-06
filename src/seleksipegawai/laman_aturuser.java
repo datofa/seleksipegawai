@@ -19,57 +19,47 @@ import javax.swing.table.DefaultTableModel;
  * @author zuni
  */
 public class laman_aturuser extends javax.swing.JFrame {
+     
+     koneksi1 koneksi;
     ResultSet resultSet;
     com.mysql.jdbc.Statement statement;
     private Connection con;
     
      
-
-    private void update_tabel() {
-        Object header[] = {"ID", "BULAN", "TAHUN"};
-        DefaultTableModel defaultTableModel = new DefaultTableModel(null, header);
-        jTable1.setModel(defaultTableModel);
-        //menghapus tabel sebelum menampilkan data
-        int baris = jTable1.getRowCount();
-        for (int i = 0; i < baris; i++) {
-            defaultTableModel.removeRow(i);
-        }
-        String sql = "select id_user, username, lev_akses from login";
-        try {
-            statement = (com.mysql.jdbc.Statement) con.createStatement();
-            resultSet = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                String kolom1 = resultSet.getString(1);
-                String kolom2 = resultSet.getString(2);
-                String kolom3 = resultSet.getString(3);
-                String kolom[] = {kolom1, kolom2, kolom3};
-                defaultTableModel.addRow(kolom);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            System.out.println("" + e.getMessage());
-        }
-    }
+  DefaultTableModel tabMode;
+  private void update_tabel(){
+    try {
+  java.sql.Connection conn;
+  conn = (java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
+     java.sql.Statement stm = conn.createStatement();
+    java.sql.ResultSet sql;
+        sql = stm.executeQuery("select id_user, username, lev_akses from login");
+   jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
+   
+    } catch (Exception e) {
+     }}
 
     /**
      * Creates new form laman_aturuser
      */
     public laman_aturuser() {
-        koneksi1 koneksi = new koneksi1();
-        con = (Connection) koneksi.koneksi();
         initComponents();
+//        tampilanadministrator();
         update_tabel();
         kosongkan_text();
         kosongkan_text_edit();
         kosongkan_text_reset();
+         
+        
     }
     
 
-    private void reset() {
+    private void reset()  {
         try {
+            
             String value1 = id_user3.getText();
             String value2 = new_pass.getText();
-            String sql = "update login set password=md5('" + value2 + "') where id_user='" + value1 + "'";
+            String sql ="update login set password=md5('"+value2+"') where id_user='"+value1+"'";
             java.sql.Connection conn;
             conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
@@ -78,37 +68,51 @@ public class laman_aturuser extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Reset Password ?");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
+              
+    }}
+    
+   
+       
+    
+    private void koneksi() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
 
+        } catch (Exception e) {
         }
     }
     
-    
-    private void kosongkan_text() {
+     private void kosongkan_text() {
+
         id_user.setText("");
         nm_user.setText("");
         pass_user.setText("");
     }
      
-    private void kosongkan_text_edit() {
+    private void kosongkan_text_edit(){
         id_user2.setText("");
         nm_user2.setText("");
         level_user2.getSelectedItem();
     }
      
-    private void kosongkan_text_reset() {
+    private void kosongkan_text_reset(){
         id_user3.setText("");
         nm_user.setText("");
         new_pass.setText("");
     }
    
-    private void insert() {
+      private void insert() {
         char[] passw = pass_user.getPassword();
         String sandi = "";
         for (int i = 0; i < passw.length; i++) {
             sandi = sandi + passw[i];
         }
+        
         System.out.print("sandi : " + sandi);
-        int level = 1;
+        
+        
+        int level=1;
         if (level_user.getSelectedItem().equals("Admin")) {
             level = 1;
         } else if (level_user.getSelectedItem().equals("HRD")) {
@@ -125,12 +129,15 @@ public class laman_aturuser extends javax.swing.JFrame {
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
             pst.execute();
             JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
+        
+//         tampilanadministrator();
         update_tabel();
         kosongkan_text();
-    }
+      }
     
     
     /**
@@ -176,6 +183,7 @@ public class laman_aturuser extends javax.swing.JFrame {
         pass_user = new javax.swing.JPasswordField();
         jToolBar2 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jToolBar3 = new javax.swing.JToolBar();
         jButton5 = new javax.swing.JButton();
@@ -383,7 +391,7 @@ public class laman_aturuser extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jInternalFrame4.setTitle("Atur User");
+        jInternalFrame4.setTitle("Admin");
         jInternalFrame4.setVisible(true);
 
         jTable1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -445,22 +453,22 @@ public class laman_aturuser extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(18, 18, 18)
-                        .addComponent(pass_user))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addGap(18, 18, 18)
                         .addComponent(level_user, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(18, 18, 18)
+                        .addComponent(pass_user))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addComponent(jLabel8))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(id_user, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-                            .addComponent(nm_user))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(id_user, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nm_user, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -497,6 +505,13 @@ public class laman_aturuser extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(jButton1);
+
+        jButton3.setFont(new java.awt.Font("Century Gothic", 0, 11)); // NOI18N
+        jButton3.setText("Tampil laporan");
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(jButton3);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -567,7 +582,7 @@ public class laman_aturuser extends javax.swing.JFrame {
         });
 
         level_user2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        level_user2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Admin", "HRD", "Manager" }));
+        level_user2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Admin", "HRD", "Supervisor", "Manager" }));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -588,7 +603,7 @@ public class laman_aturuser extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(id_user2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -680,7 +695,7 @@ public class laman_aturuser extends javax.swing.JFrame {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nm_user3)
                             .addComponent(new_pass))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -718,8 +733,8 @@ public class laman_aturuser extends javax.swing.JFrame {
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -745,26 +760,24 @@ public class laman_aturuser extends javax.swing.JFrame {
         jInternalFrame4Layout.setHorizontalGroup(
             jInternalFrame4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jInternalFrame4Layout.createSequentialGroup()
-                .addGroup(jInternalFrame4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jInternalFrame4Layout.createSequentialGroup()
+                .addGroup(jInternalFrame4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jInternalFrame4Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jInternalFrame4Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
                         .addGroup(jInternalFrame4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton2)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 14, Short.MAX_VALUE))
         );
         jInternalFrame4Layout.setVerticalGroup(
             jInternalFrame4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jInternalFrame4Layout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -776,9 +789,9 @@ public class laman_aturuser extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 194, Short.MAX_VALUE)
+                    .addGap(0, 235, Short.MAX_VALUE)
                     .addComponent(jInternalFrame2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 193, Short.MAX_VALUE)))
+                    .addGap(0, 235, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -787,9 +800,9 @@ public class laman_aturuser extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 293, Short.MAX_VALUE)
+                    .addGap(0, 289, Short.MAX_VALUE)
                     .addComponent(jInternalFrame2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 293, Short.MAX_VALUE)))
+                    .addGap(0, 288, Short.MAX_VALUE)))
         );
 
         pack();
@@ -816,33 +829,36 @@ public class laman_aturuser extends javax.swing.JFrame {
     }//GEN-LAST:event_id_userActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (id_user.getText().equals("") || nm_user.getText().equals("") || pass_user.getText().equals("")) {
+        // TODO add your handling code here:
+          if (id_user.getText().equals("") || nm_user.getText().equals("") || pass_user.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Masukkan username dan password!");
         } else {
             insert();
             kosongkan_text();
+//              tampilanadministrator();
             update_tabel();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        try {
-            int row = jTable1.getSelectedRow();
-            String tabel_klik;
-            tabel_klik = (jTable1.getModel().getValueAt(row, 0).toString());
-            java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet sql = stm.executeQuery("select * from login where id_user='" + tabel_klik + "'");
-            if (sql.next()) {
-                String add1 = sql.getString("id_user");
-                id_user2.setText(add1);
-                String add2 = sql.getString("username");
-                nm_user2.setText(add2);
+      // TODO add your handling code here: 
+          try {
+  int row =jTable1.getSelectedRow();
+       String tabel_klik;
+          tabel_klik = (jTable1.getModel().getValueAt(row, 0).toString());
+       java.sql.Connection conn =(java.sql.Connection)seleksipegawai.koneksi1.koneksiDB();
+           java.sql.Statement stm = conn.createStatement();
+        java.sql.ResultSet sql = stm.executeQuery("select * from login where id_user='"+tabel_klik+"'");
+          if(sql.next()){
+              String add1= sql.getString("id_user");
+              id_user2.setText(add1);
+             String add2 = sql.getString("username");
+               nm_user2.setText(add2);
                 String add3 = sql.getString("lev_akses");
-                level_user2.getSelectedItem();
+               level_user2.getSelectedItem();
+         }     }
+            catch (Exception e) {
             }
-        } catch (Exception e) {
-        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void nm_user2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nm_user2ActionPerformed
@@ -850,7 +866,7 @@ public class laman_aturuser extends javax.swing.JFrame {
     }//GEN-LAST:event_nm_user2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        dispose();        // TODO add your handling code here:
+dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -881,6 +897,7 @@ public class laman_aturuser extends javax.swing.JFrame {
         }  
         
         update_tabel();
+//        auto_number();
         kosongkan_text();
 
 
@@ -892,27 +909,35 @@ public class laman_aturuser extends javax.swing.JFrame {
             String sql = "delete from login where id_user=? ";
             java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+
             pst.setString(1, id_user2.getText());
             pst.execute();
+
             JOptionPane.showMessageDialog(null, "Hapus");
+
+
         } catch (Exception e) {
         }
+    
         update_tabel();
-        kosongkan_text();      
+        kosongkan_text();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        if (id_user3.getText().equals("") || new_pass.getText().equals("")) {
+if (id_user3.getText().equals("") || new_pass.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Masukkan username dan password!");
         } else {
             reset();
             update_tabel();
             kosongkan_text_reset();
-        }   
+        }        
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void id_user3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_user3KeyReleased
-        try {
+        // TODO add your handling code here:
+         try {
+            koneksi();
             String sql = "select username from login where id_user='" + id_user3.getText() + "'";
             statement = (com.mysql.jdbc.Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
@@ -921,7 +946,7 @@ public class laman_aturuser extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, statement);
-        }
+        }  
     }//GEN-LAST:event_id_user3KeyReleased
 
     private void nm_user3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nm_user3KeyReleased
@@ -978,6 +1003,7 @@ nm_user3.setEnabled(false);        // TODO add your handling code here:
     private javax.swing.JTextField id_user3;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;

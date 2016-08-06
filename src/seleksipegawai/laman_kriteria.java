@@ -25,7 +25,7 @@ public class laman_kriteria extends javax.swing.JFrame {
     
 // DefaultTableModel tabMode;
   private void update_tabel(){
-        Object header[] = {"ID Kriteria", "Nama Kriteria", "ID Bobot Fuzzy", "Bobot Fuzzy"};
+        Object header[] = {"ID Kriteria", "Nama Kriteria", "Nama Bobot Preferensi", "Bobot Preferensi"};
         DefaultTableModel defaultTableModel = new DefaultTableModel(null, header);
         jTable1.setModel(defaultTableModel);
 
@@ -35,8 +35,7 @@ public class laman_kriteria extends javax.swing.JFrame {
             defaultTableModel.removeRow(i);
         }
 
-
-        String sql = "select kriteria.id_kriteria, kriteria.kriteria,kriteria.id_bobotfuzzy,bobot_fuzzy.bobot from kriteria inner join bobot_fuzzy on bobot_fuzzy.id_bobotfuzzy=kriteria.id_bobotfuzzy order by id_kriteria asc";
+        String sql = "SELECT a.id_kriteria,a.kriteria,b.huruf,b.bobot FROM kriteria a INNER JOIN bobot_preferensi b  ON a.id_bp=b.id_bp order BY a.id_kriteria ASC";
         try {
             statement = (Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
@@ -67,13 +66,27 @@ public class laman_kriteria extends javax.swing.JFrame {
         kosongkan_text();
     }
     
-    public final void tampil_bf() {
-        id_bf.addItem("");
+    public String getIDBP() {
+        String id = "";
+        String sql = "SELECT id_bp FROM bobot_preferensi WHERE huruf='" + id_bp.getSelectedItem() + "'";
         try {
-            resultSet = statement.executeQuery("select id_bobotfuzzy from bobot_fuzzy");
+            java.sql.Statement statement = con.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                id = resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+        }
+        return id;
+    }
+    
+    public final void tampil_bf() {
+        id_bp.addItem("");
+        try {
+            resultSet = statement.executeQuery("select huruf from bobot_preferensi");
             while (resultSet.next()) {
-                String sa = resultSet.getString("id_bobotfuzzy");
-                id_bf.addItem(sa);
+                String sa = resultSet.getString("huruf");
+                id_bp.addItem(sa);
 
             }
         } catch (Exception e) {
@@ -84,8 +97,7 @@ public class laman_kriteria extends javax.swing.JFrame {
     private void kosongkan_text() {
         id_k.setText("");
         nm_k.setText("");
-        id_bf.setSelectedItem("");
-        bobot_bf.setText("");
+        id_bp.setSelectedItem("");
         auto_number();
     }
     
@@ -116,7 +128,7 @@ public class laman_kriteria extends javax.swing.JFrame {
 
     private void tampil_bobot() {
         try {
-            sql = "select * from bobot_fuzzy where id_bobotfuzzy='" + id_bf.getSelectedItem() + "'";
+            sql = "select bobot from bobot_preferensi where huruf='" + id_bp.getSelectedItem() + "'";
             statement = (Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
@@ -124,6 +136,58 @@ public class laman_kriteria extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, statement);
+        }
+    }
+    
+    private void insert() {
+        if (id_bp.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "ID Bobot Fuzzy Kosong");
+        } else {
+            try {
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan data?", "Validasi", dialogButton);
+                if (dialogResult == 0) {
+                    String sql;
+                    sql = "insert into kriteria values('" + id_k.getText() + "','" + nm_k.getText() + "','" + getIDBP() + "')";
+                    java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            update_tabel();
+            auto_number();
+            kosongkan_text();
+        }
+    }
+    
+    private void update() {
+        if (id_bp.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "ID Bobot Fuzzy Masih Kosong");
+        } else {
+            try {
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
+                if (dialogResult == 0) {
+                    String value1 = id_k.getText();
+                    String value2 = nm_k.getText();
+                    String sql = "update kriteria set  kriteria='" + value2 + "', id_bp='" + getIDBP()+ "'where id_kriteria='" + value1 + "'";
+                    java.sql.Connection conn;
+                    conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Diubah");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error");
+            }
+            update_tabel();
+            auto_number();
+            kosongkan_text();
         }
     }
            
@@ -151,7 +215,7 @@ public class laman_kriteria extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         bobot_bf = new javax.swing.JTextField();
-        id_bf = new javax.swing.JComboBox();
+        id_bp = new javax.swing.JComboBox();
         jButton7 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -222,10 +286,10 @@ public class laman_kriteria extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel1.setText("ID Kriteria                         :");
+        jLabel1.setText("ID Kriteria                                :");
 
         jLabel2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel2.setText("Kriteria                              :");
+        jLabel2.setText("Kriteria                                     :");
 
         id_k.setBackground(new java.awt.Color(240, 240, 240));
         id_k.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -249,12 +313,12 @@ public class laman_kriteria extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel3.setText("ID Bobot Fuzzy                 :");
+        jLabel3.setText("Nama Bobot Preferensi      :");
 
         jLabel5.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jLabel5.setText("Bobot Fuzzy                     :");
+        jLabel5.setText("Bobot Preferensi                   :");
 
-        bobot_bf.setEditable(false);
+        bobot_bf.setBackground(new java.awt.Color(240, 240, 240));
         bobot_bf.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         bobot_bf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -262,15 +326,15 @@ public class laman_kriteria extends javax.swing.JFrame {
             }
         });
 
-        id_bf.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        id_bf.addItemListener(new java.awt.event.ItemListener() {
+        id_bp.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        id_bp.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                id_bfItemStateChanged(evt);
+                id_bpItemStateChanged(evt);
             }
         });
-        id_bf.addKeyListener(new java.awt.event.KeyAdapter() {
+        id_bp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                id_bfKeyReleased(evt);
+                id_bpKeyReleased(evt);
             }
         });
 
@@ -292,7 +356,7 @@ public class laman_kriteria extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(id_bf, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(id_bp, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel2)
@@ -308,7 +372,7 @@ public class laman_kriteria extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addGap(18, 18, 18)
                             .addComponent(bobot_bf, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,7 +388,7 @@ public class laman_kriteria extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(id_bf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(id_bp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -343,7 +407,7 @@ public class laman_kriteria extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "ID", "NAMA", "ID BOBOT FUZZY", " BOBOT FUZZY"
+                "ID", "Nama", "NM Bobot Preferensi", " Bobot Preferensi"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -371,7 +435,7 @@ public class laman_kriteria extends javax.swing.JFrame {
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         jInternalFrame1Layout.setVerticalGroup(
             jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -381,79 +445,85 @@ public class laman_kriteria extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jInternalFrame1)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int baris=jTable1.getSelectedRow();
-        id_k.setText(jTable1.getValueAt(baris,0).toString());
-        nm_k.setText(jTable1.getValueAt(baris,1).toString());
-        id_bf.setSelectedItem(jTable1.getValueAt(baris, 2).toString());
-        bobot_bf.setText(jTable1.getValueAt(baris,3).toString());
+//        int baris=jTable1.getSelectedRow();
+//        id_k.setText(jTable1.getValueAt(baris,0).toString());
+//        nm_k.setText(jTable1.getValueAt(baris,1).toString());
+//        id_bp.setSelectedItem(jTable1.getValueAt(baris, 2).toString());
+        try {
+            int row = jTable1.getSelectedRow();
+            String tabel_klik;
+            tabel_klik = (jTable1.getModel().getValueAt(row, 0).toString());
+            java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet sql = stm.executeQuery("select a.id_kriteria, a.kriteria,b.huruf,b.bobot  FROM kriteria a INNER JOIN bobot_preferensi b ON a.id_bp=b.id_bp where a.id_kriteria='" + tabel_klik + "'");
+            if (sql.next()) {
+                
+                String add1 = sql.getString("a.id_kriteria");
+                id_k.setText(add1);
+                String add2 = sql.getString("a.kriteria");
+                nm_k.setText(add2);
+                Object add3 = sql.getString("b.huruf");
+                id_bp.getSelectedItem();
+                String add4 = sql.getString("b.bobot");
+                bobot_bf.setText(add4);
+            }
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void bobot_bfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bobot_bfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bobot_bfActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (id_bf.getSelectedItem() == "") {
-            JOptionPane.showMessageDialog(null, "ID Bobot Fuzzy Kosong");
-        } else {
-            try {
-                int dialogButton = JOptionPane.YES_NO_OPTION;
-                int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan data?", "Validasi", dialogButton);
-                if (dialogResult == 0) {
-                    String sql;
-                    sql = "insert into kriteria values('" + id_k.getText() + "','" + nm_k.getText() + "','" + id_bf.getSelectedItem() + "')";
-                    java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                    pst.execute();
-                    JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+        try {
+            String sql = "SELECT COUNT(*) FROM kriteria where id_kriteria='" + id_k.getText() + "'";
+            System.out.println(sql);
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                int no = resultSet.getInt(1);
+                if (no > 0) {
+                    update();
                 } else {
+                    insert();
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
             }
-            update_tabel();
-            auto_number();
-            kosongkan_text();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void id_bfKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_bfKeyReleased
+    private void id_bpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_bpKeyReleased
  
         // TODO add your handling code here:
-    }//GEN-LAST:event_id_bfKeyReleased
+    }//GEN-LAST:event_id_bpKeyReleased
 
-    private void id_bfItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_id_bfItemStateChanged
-tampil_bobot();
-    }//GEN-LAST:event_id_bfItemStateChanged
+    private void id_bpItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_id_bpItemStateChanged
+    tampil_bobot();
+    }//GEN-LAST:event_id_bpItemStateChanged
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         if (id_bf.getSelectedItem() == "") {
+         if (id_bp.getSelectedItem() == "") {
             JOptionPane.showMessageDialog(null, "ID Bobot Fuzzy Masih Kosong");
         } else {
             try {
@@ -462,9 +532,8 @@ dispose();        // TODO add your handling code here:
                 if (dialogResult == 0) {
                     String value1 = id_k.getText();
                     String value2 = nm_k.getText();
-                    Object value3 = id_bf.getSelectedItem();
-                    String sql = "update kriteria set  kriteria='" + value2 + "', id_bobotfuzzy='" + value3 + "'where id_kriteria='" + value1 + "'";
-                    System.out.println(sql);
+                    Object value3 = id_bp.getSelectedItem();
+                    String sql = "update kriteria set  kriteria='" + value2 + "', id_bp='" + value3 + "'where id_kriteria='" + value1 + "'";
                     java.sql.Connection conn;
                     conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                     java.sql.PreparedStatement pst = conn.prepareStatement(sql);
@@ -515,8 +584,12 @@ dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_id_kPropertyChange
 
     private void nm_kPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_nm_kPropertyChange
-        nm_k.setEnabled(false);
+       
     }//GEN-LAST:event_nm_kPropertyChange
+
+    private void bobot_bfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bobot_bfActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bobot_bfActionPerformed
 
         
     /**
@@ -556,7 +629,7 @@ dispose();        // TODO add your handling code here:
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bobot_bf;
-    private javax.swing.JComboBox id_bf;
+    private javax.swing.JComboBox id_bp;
     private javax.swing.JTextField id_k;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

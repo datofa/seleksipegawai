@@ -46,7 +46,19 @@ public class kriteria_periode extends javax.swing.JFrame {
         tampil_dfr();
     }
     
-
+    public String getIdKriteria() {
+        String id = "";
+        String sql = "SELECT id_kriteria FROM kriteria WHERE kriteria='" + tampil_daftar.getSelectedItem() + "'";
+        try {
+            java.sql.Statement statement = con.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                id = resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+        }
+        return id;
+    }
     
     private void update_tabel() {
         if (tampil_periode.getSelectedItem() == "") {
@@ -55,7 +67,7 @@ public class kriteria_periode extends javax.swing.JFrame {
                 conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                 java.sql.Statement stm = conn.createStatement();
                 java.sql.ResultSet sql;
-                sql = stm.executeQuery("SELECT kp.id_kp,kp.id_kriteria,k.kriteria,bf.bobot FROM(kriteria_perperiode kp LEFT JOIN kriteria k ON kp.id_kriteria=k.id_kriteria)LEFT JOIN bobot_fuzzy bf on k.id_bobotfuzzy=bf.id_bobotfuzzy ORDER BY kp.id_kp ASC");
+                sql = stm.executeQuery("SELECT a.id_kp,a.id_kriteria,b.kriteria,c.bobot FROM(kriteria_perperiode a LEFT JOIN kriteria b ON a.id_kriteria=b.id_kriteria)LEFT JOIN bobot_preferensi c on b.id_bp=c.id_bp ORDER BY a.id_kp ASC");
                 jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
             } catch (Exception e) {
             }
@@ -65,7 +77,7 @@ public class kriteria_periode extends javax.swing.JFrame {
                 conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                 java.sql.Statement stm = conn.createStatement();
                 java.sql.ResultSet sql;
-                sql = stm.executeQuery("SELECT kp.id_kp,kp.id_kriteria,k.kriteria,bf.bobot FROM(kriteria_perperiode kp LEFT JOIN kriteria k ON kp.id_kriteria=k.id_kriteria) LEFT JOIN bobot_fuzzy bf on k.id_bobotfuzzy=bf.id_bobotfuzzy where kp.id_periode='" + tampil_periode.getSelectedItem() + "'");
+                sql = stm.executeQuery("SELECT a.id_kp,a.id_kriteria,b.kriteria,c.bobot FROM(kriteria_perperiode a LEFT JOIN kriteria b ON a.id_kriteria=b.id_kriteria) LEFT JOIN bobot_preferensi c on b.id_bp=c.id_bp where a.id_periode='" + tampil_periode.getSelectedItem() + "'");
                 System.out.println(sql);
                 jTable1.setModel(net.proteanit.sql.DbUtils.resultSetToTableModel(sql));
             } catch (Exception e) {
@@ -141,53 +153,77 @@ public class kriteria_periode extends javax.swing.JFrame {
          try {
            sql="select * from kriteria where id_kriteria='"+tampil_daftar.getSelectedItem()+"'";
             statement=(Statement) con.createStatement();
-           resultSet=statement.executeQuery(sql);
-           while (resultSet.next()) {
-            }
+           resultSet=statement.executeQuery(sql);  
             } catch (Exception e) {
           JOptionPane.showMessageDialog(rootPane, statement);
         } 
         }
        
-      public String getIdKriteria() {
-        String id = "";
-        String sql = "SELECT id_kriteria FROM kriteria WHERE kriteria='" + tampil_daftar.getSelectedItem() + "'";
-        try {
-            java.sql.Statement statement = con.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-            if (resultSet.next()) {
-                id = resultSet.getString(1);
+     private void insert() {
+        if (tampil_periode.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "Periode Kosong");
+        } else if (tampil_daftar.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "Kriteria Kosong");
+        } else {
+            try {
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan data?", "Title on Box", dialogButton);
+                if (dialogResult == 0) {
+                    String sql;
+                    sql = "insert into kriteria_perperiode values('" + id_kp.getText() + "','" + tampil_periode.getSelectedItem() + "','" + getIdKriteria() + "')";
+                    java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
             }
-        } catch (SQLException e) {
+            update_tabel();
+            autonomor();
+            kosongkan_text();
         }
-        return id;
     }
-       
-       
-       
-//       private void tampil_tahun(){
-//           tampil_periode.addItem("");
-//        try {
-//            resultSet = statement.executeQuery("SELECT tahun FROM periode group by tahun order by tahun");
-//            while (resultSet.next()) {
-//                String sa = resultSet.getString("tahun");
-//                tampil_periode.addItem(sa);
-//
-//            }
-//        } catch (Exception e) {
-//        }}
-       
+     
+    private void update() {
+        if (tampil_periode.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "Periode Kosong");
+        } else if (tampil_daftar.getSelectedItem() == "") {
+            JOptionPane.showMessageDialog(null, "Kriteria Kosong");
+        } else {
+            try {
+                String value1 = id_kp.getText();
+                Object value2 = tampil_periode.getSelectedItem();
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
+                if (dialogResult == 0) {
+                    String sql = "update kriteria_perperiode set id_periode='" + value2 + "',id_kriteria='" + getIdKriteria() + "' where id_kp='" + value1 + "'";
+                    System.out.println(sql);
+                    java.sql.Connection conn;
+                    conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Berhasil Diubah");
+                } else {
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error");
+            }
+            update_tabel();
+            autonomor();
+            kosongkan_text();
+        }
+    }
 
- 
-       /**
+    /**
      *
      * @return
      */
+    public void blnskrg() {
+        SimpleDateFormat format = new SimpleDateFormat(" MMM ");
+    }
 
-     public void blnskrg(){
-         SimpleDateFormat format = new SimpleDateFormat (" MMM ");
-    }   
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -201,8 +237,8 @@ public class kriteria_periode extends javax.swing.JFrame {
         jInternalFrame2 = new javax.swing.JInternalFrame();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -250,18 +286,6 @@ public class kriteria_periode extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton1);
 
-        jButton2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jButton2.setText("Edit");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(jButton2);
-
         jButton3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jButton3.setText("Hapus");
         jButton3.setFocusable(false);
@@ -273,6 +297,18 @@ public class kriteria_periode extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton3);
+
+        jButton2.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        jButton2.setText("Tampilkan Laporan");
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton2);
 
         jButton4.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jButton4.setText("Keluar");
@@ -321,6 +357,7 @@ public class kriteria_periode extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel1.setText("ID                :");
 
+        id_kp.setBackground(new java.awt.Color(240, 240, 240));
         id_kp.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         id_kp.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -331,6 +368,7 @@ public class kriteria_periode extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel3.setText("Bulan          :");
 
+        bln.setBackground(new java.awt.Color(240, 240, 240));
         bln.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 blnPropertyChange(evt);
@@ -340,6 +378,7 @@ public class kriteria_periode extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel5.setText("Tahun");
 
+        thn.setBackground(new java.awt.Color(240, 240, 240));
         thn.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 thnPropertyChange(evt);
@@ -442,7 +481,7 @@ public class kriteria_periode extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -495,29 +534,22 @@ public class kriteria_periode extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (tampil_periode.getSelectedItem() == "") {
-            JOptionPane.showMessageDialog(null, "Periode Kosong");
-        } else if (tampil_daftar.getSelectedItem() == "") {
-            JOptionPane.showMessageDialog(null, "Kriteria Kosong");
-        } else {
-            try {
-                int dialogButton = JOptionPane.YES_NO_OPTION;
-                int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan data?", "Title on Box", dialogButton);
-                if (dialogResult == 0) {
-                String sql;
-                sql = "insert into kriteria_perperiode values('" + id_kp.getText() + "','" + tampil_periode.getSelectedItem() + "','" + getIdKriteria() + "')";
-                java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
-             } else {
+        try {
+            String sql = "SELECT COUNT(*) FROM kriteria_perperiode WHERE id_kp='" + id_kp.getText() + "'";
+            System.out.println(sql);
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                int no = resultSet.getInt(1);
+                if (no > 0) {
+                    update();
+                } else {
+                    insert();
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
             }
-            update_tabel();
-            autonomor();
-            kosongkan_text();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -530,7 +562,7 @@ public class kriteria_periode extends javax.swing.JFrame {
     }//GEN-LAST:event_tampil_daftarActionPerformed
 
     private void tampil_daftarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tampil_daftarItemStateChanged
-        tampil_kriteria();
+//        tampil_kriteria();
     }//GEN-LAST:event_tampil_daftarItemStateChanged
 
     private void tampil_periodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tampil_periodeItemStateChanged

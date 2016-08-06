@@ -138,7 +138,52 @@ public class laman_inputperiode extends javax.swing.JFrame {
         jComboBox1.setSelectedItem("");
         auto_number();
     }
+    
+    private void insert() {
+        try {
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan data?", "Validasi", dialogButton);
+            if (dialogResult == 0) {
+                String sql;
+                sql = "insert into periode values('" + id_p.getText() + "','" + konversi_bulan(jComboBox1.getSelectedItem().toString()) + "','" + jYearChooser1.getYear() + "')";
+                System.out.println(sql);
+                java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+            } else {
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        auto_number();
+        kosongkan_text();
+        update_tabel();
+    }
 
+    private void update() {
+        try {
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
+            if (dialogResult == 0) {
+                Object value1 = id_p.getText();
+                int value2 = jYearChooser1.getYear();
+                String sql = "update periode set  bulan='" + konversi_bulan(jComboBox1.getSelectedItem().toString()) + "',tahun='" + value2 + "' where id_periode='" + value1 + "'";
+                System.out.println(sql);
+                java.sql.Connection conn;
+                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Berhasil Diubah");
+            } else {
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error");
+        }
+        auto_number();
+        kosongkan_text();
+        update_tabel();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -151,7 +196,6 @@ public class laman_inputperiode extends javax.swing.JFrame {
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -183,18 +227,6 @@ public class laman_inputperiode extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton1);
-
-        jButton2.setFont(new java.awt.Font("Century Gothic", 0, 11)); // NOI18N
-        jButton2.setText("Edit");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(jButton2);
 
         jButton3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jButton3.setText("Hapus");
@@ -251,6 +283,7 @@ public class laman_inputperiode extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel3.setText("ID            :");
 
+        id_p.setBackground(new java.awt.Color(240, 240, 240));
         id_p.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         id_p.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -340,7 +373,7 @@ public class laman_inputperiode extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
                 .addGap(27, 27, 27))
         );
 
@@ -365,24 +398,22 @@ public class laman_inputperiode extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            int dialogButton = JOptionPane.YES_NO_OPTION;
-            int dialogResult = JOptionPane.showConfirmDialog(this, "Simpan data?", "Validasi", dialogButton);
-            if (dialogResult == 0) {
-                String sql;
-                sql = "insert into periode values('" + id_p.getText() + "','" + konversi_bulan(jComboBox1.getSelectedItem().toString()) + "','" + jYearChooser1.getYear() + "')";
-                System.out.println(sql);
-                java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
-            } else {
+            String sql = "SELECT COUNT(*) FROM periode where id_periode='" + id_p.getText() + "'";
+            System.out.println(sql);
+            statement = (Statement) con.createStatement();
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                int no = resultSet.getInt(1);
+                if (no > 0) {
+                    update();
+                } else {
+                    insert();
+                }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(this, "Error:\n" + e.toString(), "Kesalahan", JOptionPane.WARNING_MESSAGE);
         }
-        auto_number();
-        kosongkan_text();
-        update_tabel();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -404,30 +435,6 @@ public class laman_inputperiode extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_jTable1MouseClicked
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
-            int dialogButton = JOptionPane.YES_NO_OPTION;
-            int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
-            if (dialogResult == 0) {
-                Object value1 = id_p.getText();
-                int value2 = jYearChooser1.getYear();
-                String sql = "update periode set  bulan='" + konversi_bulan(jComboBox1.getSelectedItem().toString()) + "',tahun='" + value2 + "' where id_periode='" + value1 + "'";
-                System.out.println(sql);
-                java.sql.Connection conn;
-                conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
-                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "Berhasil Diubah");
-            } else {
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error");
-        }
-        auto_number();
-        kosongkan_text();
-        update_tabel();
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void id_pActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_pActionPerformed
     }//GEN-LAST:event_id_pActionPerformed
@@ -503,7 +510,6 @@ public class laman_inputperiode extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField id_p;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
