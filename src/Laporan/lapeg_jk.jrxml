@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0469989f-384c-4fd9-89d0-5e051af33fad">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="jk" class="java.lang.String">
+		<defaultValueExpression><![CDATA[SELECT * FROM 'pegawai' WHERE 'jk'='P"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     pegawai.`id_pegawai` AS id_pegawai,
+     pegawai.`nama` AS nama_pegawai,
+     pegawai.`jk` AS jk_pegawai,
+     pegawai.`tgl_lahir` AS tanggal_lahir,
+     pegawai.`alamat` AS alamat_pegawai
+FROM
+     `pegawai` pegawai]]>
+	</queryString>
+	<field name="id_pegawai" class="java.lang.String"/>
+	<field name="nama_pegawai" class="java.lang.String"/>
+	<field name="jk_pegawai" class="java.lang.String"/>
+	<field name="tanggal_lahir" class="java.sql.Date"/>
+	<field name="alamat_pegawai" class="java.lang.String"/>
+	<filterExpression><![CDATA[$P{FILTER}$P{FILTER}]]></filterExpression>
+	<group name="id_pegawai">
+		<groupExpression><![CDATA[$F{id_pegawai}]]></groupExpression>
+		<groupHeader>
+			<band height="40"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<image>
+				<reportElement uuid="200038b7-7a5c-4e56-9560-906b17813d1a" x="275" y="0" width="300" height="64"/>
+				<imageExpression><![CDATA["leaf_banner_green.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="b8a3a4b2-d5e1-4acf-a77f-950196e80481" style="Title" x="0" y="13" width="263" height="33"/>
+				<textElement verticalAlignment="Middle">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[LAPORAN DATA PEGAWAI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f898a778-958e-406a-86ae-883518ce3a55" style="SubTitle" x="85" y="46" width="189" height="22"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Sistem Seleksi Pegawai Teladan]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<line>
+				<reportElement uuid="8c3dc538-b278-492e-9e38-7f6c9b71f820" positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="dd7d2b35-6d29-426f-a7d5-0648fcaa0c94" style="Column header" x="100" y="21" width="119" height="15"/>
+				<textElement>
+					<font fontName="Century Gothic"/>
+				</textElement>
+				<text><![CDATA[ nama pegawai]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="11b270ab-3cb4-4530-8aaf-b31f7ba3e0ec" style="Column header" x="219" y="19" width="109" height="15"/>
+				<textElement>
+					<font fontName="Century Gothic"/>
+				</textElement>
+				<text><![CDATA[jenis kelamin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="81c5569f-3d56-4fda-b627-422e691df0e4" style="Column header" x="328" y="19" width="105" height="15"/>
+				<textElement>
+					<font fontName="Century Gothic"/>
+				</textElement>
+				<text><![CDATA[  tanggal lahir]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4863b901-d885-4d05-9149-26a23788f696" style="Column header" x="433" y="19" width="119" height="15"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Century Gothic"/>
+				</textElement>
+				<text><![CDATA[       alamat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dd7d2b35-6d29-426f-a7d5-0648fcaa0c94" style="Column header" x="0" y="19" width="85" height="15"/>
+				<textElement>
+					<font fontName="Century Gothic"/>
+				</textElement>
+				<text><![CDATA[ id pegawai]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement uuid="79fb93da-ee1d-4b1d-9dd6-d72d98151e27" positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="d0b5971f-86ea-4a74-9a3a-ea6757b60a10" style="Detail" x="118" y="1" width="120" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nama_pegawai}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8310f60d-a5d6-42d5-8cf3-4a3e397315cb" style="Detail" x="234" y="0" width="94" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{jk_pegawai}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="519084c0-2477-489b-a35c-d07fb40bf967" style="Detail" x="328" y="1" width="105" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{tanggal_lahir}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ba92a59d-4240-4222-95f1-137584ad0f98" style="Detail" x="433" y="0" width="119" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{alamat_pegawai}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d0b5971f-86ea-4a74-9a3a-ea6757b60a10" style="Detail" x="0" y="1" width="118" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{id_pegawai}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<line>
+				<reportElement uuid="1de755a1-7561-40a9-95c2-b4c9c670f5f6" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="d7f6069f-671b-44b9-b925-80ff94abbb56" style="Column header" x="433" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="dfcab57a-8cf4-42ea-b89e-41b3caab31c1" style="Column header" x="513" y="0" width="40" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="89b69743-8b32-4077-8dc7-3a2e0a56c50a" style="Column header" x="0" y="0" width="197" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

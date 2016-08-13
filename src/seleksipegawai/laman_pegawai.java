@@ -67,7 +67,7 @@ public class laman_pegawai extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
-            System.out.println("" + e.getMessage());
+//            System.out.println("" + e.getMessage());
         }
     
   }
@@ -179,7 +179,7 @@ public class laman_pegawai extends javax.swing.JFrame {
                 if (dialogResult == 0) {
                     String sql;
                     sql = "insert into pegawai values('" + id_peg.getText() + "','" + nm_peg.getText() + "','" + jeniska + "','" + new java.sql.Date(tanggal.getTime()) + "','" + alamat_peg.getText() + "')";
-                    System.out.println(sql);
+//                    System.out.println(sql);
                     java.sql.Connection conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                     java.sql.PreparedStatement pst = conn.prepareStatement(sql);
                     pst.execute();
@@ -211,7 +211,7 @@ public class laman_pegawai extends javax.swing.JFrame {
             int dialogResult = JOptionPane.showConfirmDialog(this, "Ubah data ini?", "Title on Box", dialogButton);
             if (dialogResult == 0) {
                 String sql = "update pegawai set  nama='" + value2 + "',jk='" + jeniska + "', tgl_lahir='" + new java.sql.Date(tanggal.getTime()) + "',alamat='" + value4 + "' where id_pegawai='" + value1 + "'";
-                System.out.println(sql);
+//                System.out.println(sql);
                 java.sql.Connection conn;
                 conn = (java.sql.Connection) seleksipegawai.koneksi1.koneksiDB();
                 java.sql.PreparedStatement pst = conn.prepareStatement(sql);
@@ -504,7 +504,7 @@ public class laman_pegawai extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             String sql = "SELECT COUNT(*) FROM pegawai where id_pegawai='" + id_peg.getText() + "'";
-            System.out.println(sql);
+//            System.out.println(sql);
             statement = (Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
 

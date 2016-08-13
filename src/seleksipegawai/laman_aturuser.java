@@ -43,6 +43,8 @@ public class laman_aturuser extends javax.swing.JFrame {
      * Creates new form laman_aturuser
      */
     public laman_aturuser() {
+        koneksi1 koneksi = new koneksi1();
+        con = (Connection) koneksi.koneksi();
         initComponents();
 //        tampilanadministrator();
         update_tabel();
@@ -74,14 +76,14 @@ public class laman_aturuser extends javax.swing.JFrame {
    
        
     
-    private void koneksi() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
-
-        } catch (Exception e) {
-        }
-    }
+//    private void koneksi() {
+//        try {
+//            Class.forName("com.mysql.jdbc.Driver");
+//            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/pegawai1", "root", "");
+//
+//        } catch (Exception e) {
+//        }
+//    }
     
      private void kosongkan_text() {
 
@@ -937,7 +939,7 @@ if (id_user3.getText().equals("") || new_pass.getText().equals("")) {
     private void id_user3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_user3KeyReleased
         // TODO add your handling code here:
          try {
-            koneksi();
+//            koneksi();
             String sql = "select username from login where id_user='" + id_user3.getText() + "'";
             statement = (com.mysql.jdbc.Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);

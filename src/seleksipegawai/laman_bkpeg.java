@@ -62,7 +62,7 @@ public class laman_bkpeg extends javax.swing.JFrame {
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
-                System.out.println("" + e.getMessage());
+//                System.out.println("" + e.getMessage());
             }
         }
         else {
@@ -579,7 +579,7 @@ public class laman_bkpeg extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
    try {
             String sql = "SELECT COUNT(*) FROM bk_pegawai WHERE id_pegawai='" + id_p.getText() + "' AND id_periode='" + tampil_periode.getSelectedItem() + "' AND id_kriteria='" + getIdKriteria() + "'";
-            System.out.println(sql);
+//            System.out.println(sql);
             statement = (Statement) con.createStatement();
             resultSet = statement.executeQuery(sql);
            

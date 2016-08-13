@@ -4,16 +4,42 @@
  */
 package Laporan;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.view.JasperViewer;
+import seleksipegawai.koneksi1;
+
 /**
  *
  * @author zuni
  */
 public class lap_peg extends javax.swing.JFrame {
-
+ koneksi1 koneksi;
+    ResultSet resultSet;
+    Statement statement;
+    public String sql = "";
+    private Connection con;
+     JasperReport jr;
+    JasperPrint JP;
+    Map param = new HashMap();
+    JasperDesign jd;
     /**
      * Creates new form lap_peg
      */
     public lap_peg() {
+        koneksi1 koneksi = new koneksi1();
+        con = (Connection) koneksi.koneksi();
         initComponents();
     }
 
@@ -111,6 +137,11 @@ public class lap_peg extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Century Gothic", 0, 11)); // NOI18N
         jButton1.setText("YA");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -213,7 +244,7 @@ public class lap_peg extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -229,6 +260,17 @@ public class lap_peg extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     try{
+         String report ="D:\\FOLDER ZUNI\\SISTEM SELEKSI\\seleksipegawai\\src\\Laporan\\laporan_pegawai.jrxml";
+         JasperReport jr= JasperCompileManager.compileReport(report);
+         JasperPrint jp= JasperFillManager.fillReport(jr, null, con);
+         JasperViewer.viewReport(jp, false);
+     } catch (Exception e){
+         e.printStackTrace();
+     }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,6 +301,7 @@ public class lap_peg extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new lap_peg().setVisible(true);
             }
